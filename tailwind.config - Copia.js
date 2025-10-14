@@ -1,13 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx,mdx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        primary: "#1e40af",   // Azul institucional IPPUR
-        secondary: "#f59e0b", // Amarelo-ouro institucional
+        primary: "#1e40af",
+        secondary: "#f59e0b",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
@@ -15,4 +16,4 @@ module.exports = {
     },
   },
   plugins: [],
-};
+}

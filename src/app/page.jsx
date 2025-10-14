@@ -1,7 +1,7 @@
-import HeroBanner from "@/components/HeroBanner";
-import QuickLinks from "@/components/QuickLinks";
-import SobreResumo from "@/components/SobreResumo";
-import CardNoticia from "@/components/CardNoticia";
+import HeroBanner from "../components/HeroBanner";
+import QuickLinks from "../components/QuickLinks";
+import SobreResumo from "../components/SobreResumo";
+import CardNoticia from "../components/CardNoticia";
 
 export default function Home() {
   const noticias = [
