@@ -1,10 +1,26 @@
+"use client";
+import PageBase from "@/components/PageBase";
+
 export default function Transparencia() {
   return (
-    <section className="max-w-5xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-semibold text-blue-700 mb-4">Transparência</h1>
-      <p className="text-gray-700">
-        Acompanhe as informações sobre gestão, orçamento e licitações públicas.
-      </p>
-    </section>
+    <PageBase
+      titulo="Transparência"
+      subtitulo="Acesso às informações públicas, relatórios e documentos oficiais."
+    >
+      <ul className="space-y-4 text-neutral-dark">
+        <li>
+          📑 <a href="#" className="text-primary hover:text-secondary transition">Relatório de Atividades 2024</a>
+        </li>
+        <li>
+          💰 <a href="#" className="text-primary hover:text-secondary transition">Demonstrativo Financeiro – 1º Semestre</a>
+        </li>
+        <li>
+          📊 <a href="#" className="text-primary hover:text-secondary transition">Plano Plurianual de Investimentos 2025</a>
+        </li>
+        <li>
+          🧾 <a href="#" className="text-primary hover:text-secondary transition">Licitações e Contratos Vigentes</a>
+        </li>
+      </ul>
+    </PageBase>
   );
 }
