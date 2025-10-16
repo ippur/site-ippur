@@ -1,27 +1,80 @@
+"use client";
+
+import Link from "next/link";
+import { Newspaper, FileText, Phone, Info, Scale, Building2 } from "lucide-react";
+import { motion } from "framer-motion";
+
 export default function QuickLinks() {
   const links = [
-    { nome: "Transparência", icone: "📊", url: "/transparencia", cor: "bg-blue-100" },
-    { nome: "Licitações", icone: "📑", url: "/licitacoes", cor: "bg-yellow-100" },
-    { nome: "Notícias", icone: "📰", url: "/noticias", cor: "bg-green-100" },
-    { nome: "Contatos", icone: "☎️", url: "/contatos", cor: "bg-purple-100" },
+    {
+      id: 1,
+      icon: <Newspaper className="w-8 h-8 text-primary" />,
+      title: "Notícias",
+      desc: "Acompanhe as últimas ações e projetos do IPPUR.",
+      href: "/noticias",
+    },
+    {
+      id: 2,
+      icon: <FileText className="w-8 h-8 text-primary" />,
+      title: "Transparência",
+      desc: "Acesse informações e relatórios de gestão.",
+      href: "/transparencia",
+    },
+    {
+      id: 3,
+      icon: <Scale className="w-8 h-8 text-primary" />,
+      title: "Licitações",
+      desc: "Confira editais, resultados e avisos oficiais.",
+      href: "/licitacoes",
+    },
+    {
+      id: 4,
+      icon: <Info className="w-8 h-8 text-primary" />,
+      title: "Sobre o IPPUR",
+      desc: "Saiba mais sobre nossa missão e estrutura.",
+      href: "/sobre",
+    },
+    {
+      id: 5,
+      icon: <Phone className="w-8 h-8 text-primary" />,
+      title: "Contatos",
+      desc: "Fale conosco e tire suas dúvidas.",
+      href: "/contatos",
+    },
+    {
+      id: 6,
+      icon: <Building2 className="w-8 h-8 text-primary" />,
+      title: "Projetos",
+      desc: "Conheça as obras e iniciativas em andamento.",
+      href: "#", // poderá futuramente levar a /projetos
+    },
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-12">
-      <h2 className="text-2xl font-semibold text-blue-700 mb-8 text-center">
-        Acesso Rápido
-      </h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {links.map((item) => (
-          <a
-            key={item.nome}
-            href={item.url}
-            className={`${item.cor} rounded-xl shadow-md hover:shadow-lg p-6 flex flex-col items-center justify-center text-center transition`}
-          >
-            <div className="text-4xl mb-2">{item.icone}</div>
-            <span className="text-blue-800 font-medium">{item.nome}</span>
-          </a>
-        ))}
+    <section className="bg-white py-16">
+      <div className="max-w-7xl mx-auto px-4 text-center">
+        <h2 className="text-3xl font-serif font-bold text-primary-dark mb-12">
+          Acesso Rápido
+        </h2>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {links.map((item, i) => (
+            <motion.div
+              key={item.id}
+              className="bg-neutral-light rounded-xl shadow-card p-8 hover:shadow-smooth transition-shadow cursor-pointer border border-neutral-medium hover:border-secondary"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Link href={item.href} className="flex flex-col items-center space-y-4">
+                <div className="bg-primary/10 p-4 rounded-full">{item.icon}</div>
+                <h3 className="text-xl font-semibold text-primary">{item.title}</h3>
+                <p className="text-neutral-dark text-sm">{item.desc}</p>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
