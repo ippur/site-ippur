@@ -52,20 +52,10 @@ export default function Footer() {
       <div className="w-full border-t border-white/20 my-6"></div>
 
       {/* 📄 Rodapé final */}
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-200">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-center items-center text-sm text-gray-200">
         <p>
           © {ano} Instituto de Pesquisa, Planejamento Urbano e Desenvolvimento Sustentável de Redenção – IPPUR.
-        </p>
-        <p className="mt-2 md:mt-0">
-          Desenvolvido por{" "}
-          <Link
-            href="https://habecksystem.com.br"
-            target="_blank"
-            className="text-secondary hover:text-secondary-light font-medium transition"
-          >
-            Habeck System Tecnologia
-          </Link>
-        </p>
+        </p>        
       </div>
     </footer>
   );
