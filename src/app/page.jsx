@@ -23,7 +23,6 @@ export default function Home() {
   return (
     <>
       <HeroBanner />
-      <QuickLinks />
 
       <section className="max-w-7xl mx-auto px-4 py-20">
         <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary-dark mb-12 text-center">
@@ -42,6 +41,9 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {/* ⬇️ QuickLinks movido para abaixo das notícias */}
+      <QuickLinks />
 
       <SobreResumo />
     </>

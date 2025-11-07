@@ -54,4 +54,29 @@ export default function NoticiaDetalhePage() {
   }
 
   return (
-    <PageBase titulo={noticia.titulo} subtitulo=
+    <PageBase titulo={noticia.titulo} subtitulo={noticia.subtitulo}>
+      <div className="max-w-3xl mx-auto p-4">
+        {noticia.imagem && (
+          <img
+            src={noticia.imagem}
+            alt={noticia.titulo}
+            className="rounded-lg w-full mb-6"
+          />
+        )}
+
+        <p className="text-justify leading-relaxed text-neutral-700 whitespace-pre-line">
+          {noticia.conteudo}
+        </p>
+
+        <div className="text-center mt-8">
+          <Link
+            href="/noticias"
+            className="text-primary hover:underline font-medium"
+          >
+            ← Voltar às notícias
+          </Link>
+        </div>
+      </div>
+    </PageBase>
+  );
+}
