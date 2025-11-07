@@ -1,36 +1,37 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
+        // 🎨 Paleta inspirada na bandeira de Redenção-PA
         primary: {
-          DEFAULT: "#1e40af", // Azul institucional IPPUR
-          light: "#3b82f6",   // Azul claro (hover, destaques)
-          dark: "#1e3a8a",    // Azul profundo (borda, footer)
+          DEFAULT: "#004D40",   // Verde institucional escuro
+          light: "#00695C",     // Verde suave para hover ou texto
+          dark: "#00332E",      // Versão mais escura para contraste
         },
         secondary: {
-          DEFAULT: "#f59e0b", // Dourado institucional IPPUR
-          light: "#fbbf24",
-          dark: "#b45309",
+          DEFAULT: "#FFD700",   // Amarelo ouro
+          light: "#FFE34D",     // Amarelo claro
+          dark: "#C9A635",      // Dourado da corrente
+        },
+        accent: {
+          brown: "#8B4513",     // Marrom do tronco central
+          gold: "#C9A635",      // Dourado secundário
         },
         neutral: {
-          light: "#f9fafb",   // Fundo padrão
-          medium: "#e5e7eb",  // Bordas suaves
-          dark: "#4b5563",    // Texto padrão
+          light: "#FFFFFF",     // Branco puro
+          dark: "#1C1C1C",      // Preto/cinza profundo
         },
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         serif: ["Merriweather", "serif"],
       },
-      boxShadow: {
-        card: "0 2px 8px rgba(0,0,0,0.08)",
-        smooth: "0 4px 20px rgba(30,64,175,0.15)",
-      },
     },
   },
   plugins: [],
-};
+}

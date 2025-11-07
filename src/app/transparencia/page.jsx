@@ -1,26 +1,34 @@
 "use client";
+import Link from "next/link";
 import PageBase from "@/components/PageBase";
 
-export default function Transparencia() {
+export default function TransparenciaPage() {
+  const secoes = [
+    { titulo: "📬 Acesso à Informação", link: "/transparencia/acesso-informacao" },
+    { titulo: "🗣️ Audiências e Participação Popular", link: "/transparencia/audiencias" },
+    { titulo: "🤝 Convênios e Parcerias", link: "/transparencia/convenios" },
+    { titulo: "🗂️ Dados Abertos", link: "/transparencia/dados-abertos" },
+    { titulo: "💸 Despesas e Pagamentos", link: "/transparencia/despesas" },
+    { titulo: "🏢 Estrutura Organizacional e Servidores", link: "/transparencia/estrutura" },
+    { titulo: "📜 Licitações e Contratos", link: "/transparencia/licitacoes" },
+    { titulo: "📊 Planejamento e Orçamento", link: "/transparencia/planejamento" },
+    { titulo: "💰 Receitas Públicas", link: "/transparencia/receitas" },
+    { titulo: "📑 Relatórios e Auditorias", link: "/transparencia/relatorios" },
+  ];
+
   return (
-    <PageBase
-      titulo="Transparência"
-      subtitulo="Acesso às informações públicas, relatórios e documentos oficiais."
-    >
-      <ul className="space-y-4 text-neutral-dark">
-        <li>
-          📑 <a href="#" className="text-primary hover:text-secondary transition">Relatório de Atividades 2024</a>
-        </li>
-        <li>
-          💰 <a href="#" className="text-primary hover:text-secondary transition">Demonstrativo Financeiro – 1º Semestre</a>
-        </li>
-        <li>
-          📊 <a href="#" className="text-primary hover:text-secondary transition">Plano Plurianual de Investimentos 2025</a>
-        </li>
-        <li>
-          🧾 <a href="#" className="text-primary hover:text-secondary transition">Licitações e Contratos Vigentes</a>
-        </li>
-      </ul>
+    <PageBase titulo="Portal da Transparência" subtitulo="Acompanhe todas as informações públicas do IPPUR">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {secoes.map((secao, i) => (
+          <Link
+            key={i}
+            href={secao.link}
+            className="bg-white border rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 text-center"
+          >
+            <p className="text-lg font-semibold text-neutral-dark mb-1">{secao.titulo}</p>
+          </Link>
+        ))}
+      </div>
     </PageBase>
   );
 }

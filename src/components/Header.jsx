@@ -13,7 +13,6 @@ export default function Header() {
     { href: "/", label: "Início" },
     { href: "/noticias", label: "Notícias" },
     { href: "/transparencia", label: "Transparência" },
-    { href: "/licitacoes", label: "Licitações" },
     { href: "/sobre", label: "Sobre" },
     { href: "/contatos", label: "Contatos" },
   ];
