@@ -1,38 +1,35 @@
+"use client";
+
 import PageBase from "@/components/PageBase";
-import CardDocumento from "@/components/CardDocumento";
-import { fetchAPI } from "@/lib/api";
+import TransparenciaSection from "@/components/TransparenciaSection";
 
-export const metadata = {
-  title: "Convênios e Parcerias | IPPUR Redenção",
-  description:
-    "Informações sobre acordos, termos de fomento e parcerias firmadas pelo IPPUR.",
-};
-
-export default async function ConveniosPage() {
-  const convenios = await fetchAPI("/transparencia?tipo=convenio");
-
+export default function ConveniosPage() {
   return (
     <PageBase
       titulo="Convênios e Parcerias"
-      subtitulo="Acordos, termos de fomento e parcerias realizadas pelo IPPUR com outras instituições públicas e privadas."
+      subtitulo="Acordos firmados pelo IPPUR com outras instituições."
     >
-      {convenios.length === 0 ? (
-        <p className="text-center text-neutral-medium">
-          Nenhum convênio ou parceria registrado no momento.
-        </p>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {convenios.map((c) => (
-            <CardDocumento
-              key={c.id}
-              titulo={c.titulo}
-              tipo={c.tipo}
-              data={c.data}
-              arquivo={c.arquivo}
-            />
-          ))}
-        </div>
-      )}
+      <TransparenciaSection
+        titulo="Convênios"
+        descricao="Instrumentos firmados com órgãos públicos, universidades e entidades parceiras para execução de projetos."
+      >
+        <ul className="list-disc ml-6 text-neutral-dark space-y-2">
+          <li>Termos de cooperação técnica.</li>
+          <li>Convênios com repasse de recursos.</li>
+          <li>Parcerias voltadas para planejamento urbano e pesquisas.</li>
+        </ul>
+      </TransparenciaSection>
+
+      <TransparenciaSection
+        titulo="Transparência dos Convênios"
+        descricao="As principais informações sobre convênios devem ser publicadas de forma clara."
+      >
+        <ul className="list-disc ml-6 text-neutral-dark space-y-2">
+          <li>Objeto do convênio.</li>
+          <li>Partes envolvidas.</li>
+          <li>Vigência, valores e contrapartidas.</li>
+        </ul>
+      </TransparenciaSection>
     </PageBase>
   );
 }

@@ -1,38 +1,35 @@
+"use client";
+
 import PageBase from "@/components/PageBase";
-import CardDocumento from "@/components/CardDocumento";
-import { fetchAPI } from "@/lib/api";
+import TransparenciaSection from "@/components/TransparenciaSection";
 
-export const metadata = {
-  title: "Receitas Públicas | IPPUR Redenção",
-  description:
-    "Acompanhe as informações de arrecadação e origem dos recursos que financiam as atividades do IPPUR.",
-};
-
-export default async function ReceitasPage() {
-  const receitas = await fetchAPI("/transparencia?tipo=receita");
-
+export default function ReceitasPage() {
   return (
     <PageBase
       titulo="Receitas Públicas"
-      subtitulo="Origem e arrecadação dos recursos do IPPUR, conforme a Lei Complementar nº 131/2009."
+      subtitulo="Origem dos recursos utilizados nas ações do IPPUR."
     >
-      {receitas.length === 0 ? (
-        <p className="text-center text-neutral-medium">
-          Nenhuma informação de receita disponível no momento.
+      <TransparenciaSection
+        titulo="Fontes de Recursos"
+        descricao="As receitas vinculadas às ações do IPPUR podem ter diversas origens."
+      >
+        <ul className="list-disc ml-6 text-neutral-dark space-y-2">
+          <li>Recursos do orçamento municipal/estadual.</li>
+          <li>Transferências voluntárias e convênios.</li>
+          <li>Parcerias com órgãos federais e organismos internacionais.</li>
+        </ul>
+      </TransparenciaSection>
+
+      <TransparenciaSection
+        titulo="Divulgação das Receitas"
+        descricao="Os valores arrecadados e vinculados às ações do IPPUR podem ser consultados em sistemas oficiais de transparência."
+      >
+        <p className="text-neutral-dark">
+          A divulgação detalhada das receitas segue os padrões definidos pelos
+          órgãos de finanças públicas e é realizada em conjunto com a
+          administração central do município/estado.
         </p>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {receitas.map((r) => (
-            <CardDocumento
-              key={r.id}
-              titulo={r.titulo}
-              tipo={r.tipo}
-              data={r.data}
-              arquivo={r.arquivo}
-            />
-          ))}
-        </div>
-      )}
+      </TransparenciaSection>
     </PageBase>
   );
 }
