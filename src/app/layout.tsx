@@ -2,10 +2,11 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import type { ReactNode } from "react";
+import type { Metadata } from "next";
 
 const siteUrl = "https://site-ippur.vercel.app";
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default:
