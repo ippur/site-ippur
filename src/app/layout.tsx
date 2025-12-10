@@ -1,6 +1,7 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import type { ReactNode } from "react";
 
 const siteUrl = "https://site-ippur.vercel.app";
 
@@ -40,7 +41,11 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <html lang="pt-BR">
       <body className="min-h-screen flex flex-col bg-neutral-bg text-neutral-dark">
