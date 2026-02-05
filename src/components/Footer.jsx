@@ -13,7 +13,8 @@ export default function Footer() {
         <div>
           <h3 className="text-2xl font-serif font-semibold mb-3">IPPUR</h3>
           <p className="text-sm text-gray-100 leading-relaxed">
-            Instituto de Pesquisa, Planejamento Urbano e Desenvolvimento Sustentável de Redenção – PA.
+            Instituto de Pesquisa, Planejamento Urbano e Desenvolvimento Sustentável de
+            Redenção – PA.
           </p>
         </div>
 
@@ -21,7 +22,13 @@ export default function Footer() {
         <div className="space-y-2 text-sm">
           <div className="flex items-center space-x-2">
             <MapPin size={16} className="text-secondary" />
-            <span>Rua 13 de Maio, nº 100 - Centro, Redenção - PA</span>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=IPPUR+Redenção+PA"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-secondary-light transition underline-offset-2 hover:underline"
+            ></a>
+            <span>Rua Benedito C Gomes, 82 - Serrinha, Redenção - PA, 68553-008</span>
           </div>
           <div className="flex items-center space-x-2">
             <Phone size={16} className="text-secondary" />
@@ -52,10 +59,19 @@ export default function Footer() {
       <div className="w-full border-t border-white/20 my-6"></div>
 
       {/* 📄 Rodapé final */}
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-center items-center text-sm text-gray-200">
-        <p>
-          © {ano} Instituto de Pesquisa, Planejamento Urbano e Desenvolvimento Sustentável de Redenção – IPPUR.
-        </p>        
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row md:justify-between justify-center items-center gap-3 text-sm text-gray-200">
+        <p className="text-center">
+          © {ano} Instituto de Pesquisa, Planejamento Urbano e Desenvolvimento Sustentável
+          de Redenção – IPPUR.
+        </p>
+
+        {/* 🔒 Link discreto para área administrativa */}
+        <Link
+          href="/admin/login"
+          className="text-xs text-gray-200/80 hover:text-secondary-light transition"
+        >
+          Acesso Restrito
+        </Link>
       </div>
     </footer>
   );
