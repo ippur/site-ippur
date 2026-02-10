@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "webmail.ippur.pa.gov.br"
+        }
+      ],
+      "destination": "https://mail.hostinger.com",
+      "permanent": true
+    }
+  ]
+}
