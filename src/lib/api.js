@@ -81,3 +81,71 @@ export async function deleteDocumentoTransparencia(id, token) {
   }
   return res.json();
 }
+// =========================
+// NOTÍCIAS (ADMIN)
+// =========================
+
+// Listar notícias (público)
+export async function listNoticias() {
+  const res = await fetch(`${BASE_URL}/noticias`, { cache: "no-store" });
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao listar notícias");
+  }
+  return res.json();
+}
+
+// Obter notícia por id (público)
+export async function getNoticiaById(id) {
+  const res = await fetch(`${BASE_URL}/noticias/${id}`, { cache: "no-store" });
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao carregar notícia");
+  }
+  return res.json();
+}
+
+// Criar notícia (multipart - admin)
+export async function createNoticia(formData, token) {
+  const res = await fetch(`${BASE_URL}/noticias`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao criar notícia");
+  }
+  return res.json();
+}
+
+// Atualizar notícia (multipart - admin)
+// Se não enviar "imagem", mantém a imagem atual (backend já faz isso se você programou assim)
+export async function updateNoticia(id, formData, token) {
+  const res = await fetch(`${BASE_URL}/noticias/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao atualizar notícia");
+  }
+  return res.json();
+}
+
+// Excluir notícia (admin)
+export async function deleteNoticia(id, token) {
+  const res = await fetch(`${BASE_URL}/noticias/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao excluir notícia");
+  }
+  return res.json();
+}
