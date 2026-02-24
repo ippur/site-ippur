@@ -1,7 +1,16 @@
 // src/lib/api.js
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com/api";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com";
+
+// sempre trabalhar com /api como prefixo fixo
+const BASE_URL = `${API_BASE.replace(/\/$/, "")}/api`;
+
+// helper: pega token do padrão do projeto
+export function getToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("ippur_token");
+}
 
 // helper interno: tenta ler mensagem de erro do backend
 async function parseError(res) {
@@ -20,6 +29,10 @@ export async function fetchAPI(endpoint) {
   return res.json();
 }
 
+// =========================
+// AUTH
+// =========================
+
 // Login (retorna { token, usuario })
 export async function login(email, senha) {
   const res = await fetch(`${BASE_URL}/usuarios/login`, {
@@ -35,12 +48,13 @@ export async function login(email, senha) {
   return res.json();
 }
 
-/* =========================
-   TRANSPARÊNCIA
-========================= */
+// =========================
+// TRANSPARÊNCIA
+// =========================
 
-// Listar documentos (GET)
-export async function listDocumentosTransparencia(token) {
+// Listar documentos (GET) - é público, token é opcional
+export async function listDocumentosTransparencia() {
+  const token = getToken();
   const res = await fetch(`${BASE_URL}/transparencia`, {
     cache: "no-store",
     headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -53,8 +67,11 @@ export async function listDocumentosTransparencia(token) {
   return res.json();
 }
 
-// Criar documento (multipart)
-export async function createDocumentoTransparencia(formData, token) {
+// Criar documento (multipart) - admin
+export async function createDocumentoTransparencia(formData) {
+  const token = getToken();
+  if (!token) throw new Error("Token não encontrado");
+
   const res = await fetch(`${BASE_URL}/transparencia`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
@@ -68,8 +85,11 @@ export async function createDocumentoTransparencia(formData, token) {
   return res.json();
 }
 
-// Excluir documento
-export async function deleteDocumentoTransparencia(id, token) {
+// Excluir documento - admin
+export async function deleteDocumentoTransparencia(id) {
+  const token = getToken();
+  if (!token) throw new Error("Token não encontrado");
+
   const res = await fetch(`${BASE_URL}/transparencia/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
@@ -81,11 +101,60 @@ export async function deleteDocumentoTransparencia(id, token) {
   }
   return res.json();
 }
+
 // =========================
-// NOTÍCIAS (ADMIN)
+// LICITAÇÕES (ADMIN)
 // =========================
 
-// Listar notícias (público)
+export async function listLicitacoes() {
+  const res = await fetch(`${BASE_URL}/transparencia/licitacoes`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao listar licitações");
+  }
+  return res.json();
+}
+
+export async function createLicitacao(formData) {
+  const token = getToken();
+  if (!token) throw new Error("Token não encontrado");
+
+  const res = await fetch(`${BASE_URL}/transparencia/licitacoes`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao criar licitação");
+  }
+  return res.json();
+}
+
+export async function deleteLicitacao(id) {
+  const token = getToken();
+  if (!token) throw new Error("Token não encontrado");
+
+  const res = await fetch(`${BASE_URL}/transparencia/licitacoes/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res);
+    throw new Error(msg || "Falha ao excluir licitação");
+  }
+  return res.json();
+}
+
+// =========================
+// NOTÍCIAS
+// =========================
+
 export async function listNoticias() {
   const res = await fetch(`${BASE_URL}/noticias`, { cache: "no-store" });
   if (!res.ok) {
@@ -95,7 +164,6 @@ export async function listNoticias() {
   return res.json();
 }
 
-// Obter notícia por id (público)
 export async function getNoticiaById(id) {
   const res = await fetch(`${BASE_URL}/noticias/${id}`, { cache: "no-store" });
   if (!res.ok) {
@@ -105,8 +173,10 @@ export async function getNoticiaById(id) {
   return res.json();
 }
 
-// Criar notícia (multipart - admin)
-export async function createNoticia(formData, token) {
+export async function createNoticia(formData) {
+  const token = getToken();
+  if (!token) throw new Error("Token não encontrado");
+
   const res = await fetch(`${BASE_URL}/noticias`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
@@ -120,9 +190,10 @@ export async function createNoticia(formData, token) {
   return res.json();
 }
 
-// Atualizar notícia (multipart - admin)
-// Se não enviar "imagem", mantém a imagem atual (backend já faz isso se você programou assim)
-export async function updateNoticia(id, formData, token) {
+export async function updateNoticia(id, formData) {
+  const token = getToken();
+  if (!token) throw new Error("Token não encontrado");
+
   const res = await fetch(`${BASE_URL}/noticias/${id}`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
@@ -136,8 +207,10 @@ export async function updateNoticia(id, formData, token) {
   return res.json();
 }
 
-// Excluir notícia (admin)
-export async function deleteNoticia(id, token) {
+export async function deleteNoticia(id) {
+  const token = getToken();
+  if (!token) throw new Error("Token não encontrado");
+
   const res = await fetch(`${BASE_URL}/noticias/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
@@ -148,4 +221,20 @@ export async function deleteNoticia(id, token) {
     throw new Error(msg || "Falha ao excluir notícia");
   }
   return res.json();
+}
+
+// ====== helper para rotas protegidas (admin) ======
+export async function apiFetch(url, options = {}) {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("ippur_token") : null;
+
+  const headers = { ...(options.headers || {}) };
+
+  // adiciona Authorization se tiver token
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch(url, { ...options, headers });
+
+  if (res.status === 401) throw new Error("401");
+  return res;
 }

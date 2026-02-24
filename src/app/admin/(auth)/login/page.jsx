@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
       const data = await login(email, senha);
       localStorage.setItem("ippur_token", data.token);
       localStorage.setItem("ippur_user", JSON.stringify(data.usuario || {}));
-      router.push("/admin/transparencia");
+      router.push("/admin/dashboard");
     } catch (err) {
       setErro("E-mail ou senha inválidos.");
     } finally {
