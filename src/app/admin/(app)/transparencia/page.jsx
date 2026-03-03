@@ -59,6 +59,7 @@ export default function AdminTransparenciaPage() {
   const [titulo, setTitulo] = useState("");
   const [tipo, setTipo] = useState("Despesa");
   const [data, setData] = useState(""); // yyyy-mm-dd
+  const [comentarios, setComentarios] = useState(""); // ✅ novo (opcional)
   const [arquivo, setArquivo] = useState(null);
 
   // list
@@ -114,7 +115,8 @@ export default function AdminTransparenciaPage() {
       .filter((d) => (fTipo === "Todos" ? true : (d.tipo || "") === fTipo))
       .filter((d) => {
         if (!term) return true;
-        const text = `${d.titulo || ""} ${d.tipo || ""}`.toLowerCase();
+        // ✅ inclui comentários na busca
+        const text = `${d.titulo || ""} ${d.tipo || ""} ${d.comentarios || ""}`.toLowerCase();
         return text.includes(term);
       });
   }, [docs, q, fTipo]);
@@ -134,6 +136,8 @@ export default function AdminTransparenciaPage() {
       fd.append("titulo", titulo.trim());
       fd.append("tipo", tipo);
       fd.append("data", data);
+      // ✅ opcional de verdade: só manda se tiver texto
+      if (comentarios?.trim()) fd.append("comentarios", comentarios.trim());
       fd.append("arquivo", arquivo); // bate com upload.single("arquivo")
 
       await createDocumentoTransparencia(fd, token);
@@ -142,6 +146,7 @@ export default function AdminTransparenciaPage() {
       setTitulo("");
       setTipo("Despesa");
       setData("");
+      setComentarios(""); // ✅ limpa comentários
       setArquivo(null);
 
       await carregarDocumentos(token);
@@ -249,6 +254,20 @@ export default function AdminTransparenciaPage() {
               </div>
             </div>
 
+            {/* ✅ Comentários (opcional) */}
+            <div>
+              <label className="block text-sm text-neutral-dark mb-1">
+                Comentários (opcional)
+              </label>
+              <textarea
+                className="w-full border rounded-lg p-2"
+                value={comentarios}
+                onChange={(e) => setComentarios(e.target.value)}
+                placeholder="Resumo do conteúdo, contexto, período, observações..."
+                rows={4}
+              />
+            </div>
+
             <div>
               <label className="block text-sm text-neutral-dark mb-1">Arquivo</label>
               <input
@@ -336,6 +355,13 @@ export default function AdminTransparenciaPage() {
                           {d.data ? formatDateBR(d.data) : "—"}
                         </span>
                       </p>
+
+                      {/* ✅ Exibe comentários quando existir */}
+                      {d.comentarios ? (
+                        <p className="mt-1 text-sm text-neutral-dark/80 whitespace-pre-wrap">
+                          {d.comentarios}
+                        </p>
+                      ) : null}
                     </div>
 
                     <div className="flex items-center gap-3">

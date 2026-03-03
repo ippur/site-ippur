@@ -4,23 +4,26 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333";
 
 export default function DocumentosPage() {
   const router = useRouter();
   const [items, setItems] = useState([]);
 
   const [titulo, setTitulo] = useState("");
-  const [tipo, setTipo] = useState("documento"); // você pode mudar para categorias
-  const [data, setData] = useState(() => new Date().toISOString().slice(0, 10)); // yyyy-mm-dd
+  const [tipo, setTipo] = useState("documento");
+  const [data, setData] = useState(() => new Date().toISOString().slice(0, 10));
+  const [comentarios, setComentarios] = useState("");
   const [arquivo, setArquivo] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
   async function load() {
     try {
-      const res = await apiFetch(`${API}/api/transparencia`);
-      setItems(await res.json());
+      // ✅ Opção A + filtro: pega só documentos
+      const res = await apiFetch(`${API}/api/transparencia?tipo=documento`);
+      const data = await res.json();
+      setItems(Array.isArray(data) ? data : []);
     } catch (e) {
       if (e.message === "401") router.push("/admin/login");
     }
@@ -41,8 +44,9 @@ export default function DocumentosPage() {
       const fd = new FormData();
       fd.append("titulo", titulo);
       fd.append("tipo", tipo);
-      fd.append("data", data); // backend faz new Date(data)
-      fd.append("arquivo", arquivo); // campo certo
+      fd.append("data", data);
+      if (comentarios?.trim()) fd.append("comentarios", comentarios); // ✅ opcional de verdade
+      fd.append("arquivo", arquivo);
 
       const res = await apiFetch(`${API}/api/transparencia`, {
         method: "POST",
@@ -54,6 +58,7 @@ export default function DocumentosPage() {
       setTitulo("");
       setTipo("documento");
       setData(new Date().toISOString().slice(0, 10));
+      setComentarios("");
       setArquivo(null);
 
       await load();
@@ -99,7 +104,18 @@ export default function DocumentosPage() {
 
           <input type="date" value={data} onChange={(e) => setData(e.target.value)} />
 
-          <input type="file" onChange={(e) => setArquivo(e.target.files?.[0] || null)} />
+          <textarea
+            placeholder="Comentários / resumo (opcional)"
+            value={comentarios}
+            onChange={(e) => setComentarios(e.target.value)}
+            rows={4}
+          />
+
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setArquivo(e.target.files?.[0] || null)}
+          />
 
           <button disabled={loading}>{loading ? "Enviando..." : "Enviar"}</button>
         </div>
@@ -111,19 +127,27 @@ export default function DocumentosPage() {
         {items.length === 0 && <li>Nenhum documento cadastrado.</li>}
 
         {items.map((it) => (
-          <li key={it.id} style={{ marginBottom: 10 }}>
+          <li key={it.id} style={{ marginBottom: 12 }}>
             <strong>{it.titulo}</strong> <small>({it.tipo})</small>{" "}
             <small>{new Date(it.data).toLocaleDateString("pt-BR")}</small>
 
-            {it.arquivo && (
-              <a style={{ marginLeft: 12 }} href={`${API}${it.arquivo}`} target="_blank" rel="noreferrer">
-                Abrir
-              </a>
+            {it.comentarios && (
+              <div style={{ marginTop: 4 }}>
+                <small>{it.comentarios}</small>
+              </div>
             )}
 
-            <button onClick={() => onDelete(it.id)} style={{ marginLeft: 12, color: "red" }}>
-              Excluir
-            </button>
+            <div style={{ marginTop: 6 }}>
+              {it.arquivo && (
+                <a href={`${API}${it.arquivo}`} target="_blank" rel="noreferrer">
+                  Abrir
+                </a>
+              )}
+
+              <button onClick={() => onDelete(it.id)} style={{ marginLeft: 12, color: "red" }}>
+                Excluir
+              </button>
+            </div>
           </li>
         ))}
       </ul>

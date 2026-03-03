@@ -4,13 +4,21 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333";
 
 export default function LicitacoesPage() {
   const router = useRouter();
-  const [file, setFile] = useState(null);
+
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // ✅ Campos exigidos pelo backend
+  const [titulo, setTitulo] = useState("");
+  const [modalidade, setModalidade] = useState("");
+  const [status, setStatus] = useState("Aberta");
+  const [data, setData] = useState(() => new Date().toISOString().slice(0, 10));
+  const [comentarios, setComentarios] = useState("");
+  const [arquivo, setArquivo] = useState(null);
 
   async function load() {
     try {
@@ -26,14 +34,24 @@ export default function LicitacoesPage() {
     load();
   }, []);
 
-  async function upload(e) {
+  async function onUpload(e) {
     e.preventDefault();
-    if (!file) return;
+
+    if (!titulo.trim()) return alert("Informe o título.");
+    if (!modalidade.trim()) return alert("Informe a modalidade.");
+    if (!status.trim()) return alert("Informe o status.");
+    if (!data) return alert("Informe a data.");
+    if (!arquivo) return alert("Selecione um arquivo.");
 
     setLoading(true);
     try {
       const fd = new FormData();
-      fd.append("arquivo", file); // IMPORTANTE: seu backend usa "arquivo"
+      fd.append("titulo", titulo);
+      fd.append("modalidade", modalidade);
+      fd.append("status", status);
+      fd.append("data", data);
+      if (comentarios?.trim()) fd.append("comentarios", comentarios); // ✅ opcional de verdade
+      fd.append("arquivo", arquivo); // ✅ backend usa "arquivo"
 
       const res = await apiFetch(`${API}/api/transparencia/licitacoes`, {
         method: "POST",
@@ -42,9 +60,15 @@ export default function LicitacoesPage() {
 
       if (!res.ok) throw new Error("Falha no upload");
 
-      setFile(null);
+      setTitulo("");
+      setModalidade("");
+      setStatus("Aberta");
+      setData(new Date().toISOString().slice(0, 10));
+      setComentarios("");
+      setArquivo(null);
+
       await load();
-      alert("Upload concluído.");
+      alert("Licitação enviada.");
     } catch (e) {
       if (e.message === "401") router.push("/admin/login");
       else alert("Erro no upload.");
@@ -53,7 +77,7 @@ export default function LicitacoesPage() {
     }
   }
 
-  async function remove(id) {
+  async function onDelete(id) {
     if (!confirm("Excluir esta licitação?")) return;
     try {
       const res = await apiFetch(`${API}/api/transparencia/licitacoes/${id}`, {
@@ -61,7 +85,7 @@ export default function LicitacoesPage() {
       });
       if (!res.ok) throw new Error("Falha ao excluir");
       await load();
-    } catch (e) {
+    } catch {
       alert("Erro ao excluir.");
     }
   }
@@ -70,32 +94,82 @@ export default function LicitacoesPage() {
     <main>
       <h1>Licitações</h1>
 
-      <form onSubmit={upload} style={{ marginTop: 16, marginBottom: 24 }}>
-        <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-        <button disabled={loading || !file} style={{ marginLeft: 8 }}>
-          {loading ? "Enviando..." : "Upload"}
-        </button>
+      <form onSubmit={onUpload} style={{ marginTop: 16, marginBottom: 24 }}>
+        <div style={{ display: "grid", gap: 10, maxWidth: 520 }}>
+          <input
+            placeholder="Título"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+          />
+
+          <input
+            placeholder="Modalidade (ex: Pregão, Concorrência...)"
+            value={modalidade}
+            onChange={(e) => setModalidade(e.target.value)}
+          />
+
+          <input
+            placeholder="Status (ex: Aberta, Encerrada...)"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          />
+
+          <input
+            type="date"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+          />
+
+          <textarea
+            placeholder="Comentários / resumo (opcional)"
+            value={comentarios}
+            onChange={(e) => setComentarios(e.target.value)}
+            rows={4}
+          />
+
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setArquivo(e.target.files?.[0] || null)}
+          />
+
+          <button disabled={loading}>
+            {loading ? "Enviando..." : "Upload"}
+          </button>
+        </div>
       </form>
 
       <h2>Registros</h2>
+
       <ul style={{ marginTop: 12 }}>
         {items.length === 0 && <li>Nenhuma licitação cadastrada.</li>}
 
         {items.map((it) => (
-          <li key={it.id ?? it._id} style={{ marginBottom: 8 }}>
-            <span style={{ marginRight: 10 }}>
-              {it.titulo || it.nome || it.numero || it.arquivo || it.filename || `Licitação #${it.id ?? it._id}`}
-            </span>
+          <li key={it.id} style={{ marginBottom: 12 }}>
+            <strong>{it.titulo}</strong>{" "}
+            <small>({it.modalidade} | {it.status})</small>{" "}
+            <small>{new Date(it.data).toLocaleDateString("pt-BR")}</small>
 
-            {it.url && (
-              <a href={it.url.startsWith("http") ? it.url : `${API}${it.url}`} target="_blank" rel="noreferrer">
-                Abrir
-              </a>
+            {it.comentarios && (
+              <div style={{ marginTop: 4 }}>
+                <small>{it.comentarios}</small>
+              </div>
             )}
 
-            <button onClick={() => remove(it.id ?? it._id)} style={{ marginLeft: 12, color: "red" }}>
-              Excluir
-            </button>
+            <div style={{ marginTop: 6 }}>
+              {it.arquivo && (
+                <a href={`${API}${it.arquivo}`} target="_blank" rel="noreferrer">
+                  Abrir
+                </a>
+              )}
+
+              <button
+                onClick={() => onDelete(it.id)}
+                style={{ marginLeft: 12, color: "red" }}
+              >
+                Excluir
+              </button>
+            </div>
           </li>
         ))}
       </ul>
