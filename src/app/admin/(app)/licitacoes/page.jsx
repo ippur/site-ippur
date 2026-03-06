@@ -12,7 +12,6 @@ export default function LicitacoesPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Campos exigidos pelo backend
   const [titulo, setTitulo] = useState("");
   const [modalidade, setModalidade] = useState("");
   const [status, setStatus] = useState("Aberta");
@@ -50,8 +49,12 @@ export default function LicitacoesPage() {
       fd.append("modalidade", modalidade);
       fd.append("status", status);
       fd.append("data", data);
-      if (comentarios?.trim()) fd.append("comentarios", comentarios); // ✅ opcional de verdade
-      fd.append("arquivo", arquivo); // ✅ backend usa "arquivo"
+
+      if (comentarios?.trim()) {
+        fd.append("comentarios", comentarios);
+      }
+
+      fd.append("arquivo", arquivo);
 
       const res = await apiFetch(`${API}/api/transparencia/licitacoes`, {
         method: "POST",
@@ -79,11 +82,14 @@ export default function LicitacoesPage() {
 
   async function onDelete(id) {
     if (!confirm("Excluir esta licitação?")) return;
+
     try {
       const res = await apiFetch(`${API}/api/transparencia/licitacoes/${id}`, {
         method: "DELETE",
       });
+
       if (!res.ok) throw new Error("Falha ao excluir");
+
       await load();
     } catch {
       alert("Erro ao excluir.");
@@ -158,7 +164,7 @@ export default function LicitacoesPage() {
 
             <div style={{ marginTop: 6 }}>
               {it.arquivo && (
-                <a href={`${API}${it.arquivo}`} target="_blank" rel="noreferrer">
+                <a href={it.arquivo} target="_blank" rel="noreferrer">
                   Abrir
                 </a>
               )}

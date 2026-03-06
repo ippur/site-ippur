@@ -20,7 +20,6 @@ export default function DocumentosPage() {
 
   async function load() {
     try {
-      // ✅ Opção A + filtro: pega só documentos
       const res = await apiFetch(`${API}/api/transparencia?tipo=documento`);
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
@@ -35,17 +34,23 @@ export default function DocumentosPage() {
 
   async function onUpload(e) {
     e.preventDefault();
+
     if (!arquivo) return alert("Selecione um arquivo.");
     if (!titulo.trim()) return alert("Informe o título.");
     if (!data) return alert("Informe a data.");
 
     setLoading(true);
+
     try {
       const fd = new FormData();
       fd.append("titulo", titulo);
       fd.append("tipo", tipo);
       fd.append("data", data);
-      if (comentarios?.trim()) fd.append("comentarios", comentarios); // ✅ opcional de verdade
+
+      if (comentarios?.trim()) {
+        fd.append("comentarios", comentarios);
+      }
+
       fd.append("arquivo", arquivo);
 
       const res = await apiFetch(`${API}/api/transparencia`, {
@@ -73,11 +78,14 @@ export default function DocumentosPage() {
 
   async function onDelete(id) {
     if (!confirm("Excluir este documento?")) return;
+
     try {
       const res = await apiFetch(`${API}/api/transparencia/${id}`, {
         method: "DELETE",
       });
+
       if (!res.ok) throw new Error("Falha ao excluir");
+
       await load();
     } catch {
       alert("Erro ao excluir.");
@@ -102,7 +110,11 @@ export default function DocumentosPage() {
             onChange={(e) => setTipo(e.target.value)}
           />
 
-          <input type="date" value={data} onChange={(e) => setData(e.target.value)} />
+          <input
+            type="date"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+          />
 
           <textarea
             placeholder="Comentários / resumo (opcional)"
@@ -117,7 +129,9 @@ export default function DocumentosPage() {
             onChange={(e) => setArquivo(e.target.files?.[0] || null)}
           />
 
-          <button disabled={loading}>{loading ? "Enviando..." : "Enviar"}</button>
+          <button disabled={loading}>
+            {loading ? "Enviando..." : "Enviar"}
+          </button>
         </div>
       </form>
 
@@ -139,12 +153,15 @@ export default function DocumentosPage() {
 
             <div style={{ marginTop: 6 }}>
               {it.arquivo && (
-                <a href={`${API}${it.arquivo}`} target="_blank" rel="noreferrer">
+                <a href={it.arquivo} target="_blank" rel="noreferrer">
                   Abrir
                 </a>
               )}
 
-              <button onClick={() => onDelete(it.id)} style={{ marginLeft: 12, color: "red" }}>
+              <button
+                onClick={() => onDelete(it.id)}
+                style={{ marginLeft: 12, color: "red" }}
+              >
                 Excluir
               </button>
             </div>

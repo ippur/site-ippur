@@ -35,50 +35,45 @@ function formatDateBR(value) {
   }
 }
 
-// Monta a URL do arquivo salvo (ex: "/uploads/arquivo.pdf")
-function buildFileUrl(path) {
-  if (!path) return null;
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+// Se o backend/supabase já devolver URL completa, usa direto.
+// Se devolver caminho relativo (/uploads/arquivo.pdf), monta a URL base.
+function buildFileUrl(filePath) {
+  if (!filePath) return null;
 
-  // Seu BASE_URL no api.js termina em "/api".
-  // Para abrir arquivos (/uploads), precisamos do host sem "/api".
+  if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
+    return filePath;
+  }
+
   const raw =
     process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com/api";
   const base = raw.endsWith("/api") ? raw.slice(0, -4) : raw;
 
-  return `${base}${path}`;
+  return `${base}${filePath}`;
 }
 
 export default function AdminTransparenciaPage() {
   const router = useRouter();
 
-  // auth
   const [token, setToken] = useState("");
 
-  // form
   const [titulo, setTitulo] = useState("");
   const [tipo, setTipo] = useState("Despesa");
-  const [data, setData] = useState(""); // yyyy-mm-dd
-  const [comentarios, setComentarios] = useState(""); // ✅ novo (opcional)
+  const [data, setData] = useState("");
+  const [comentarios, setComentarios] = useState("");
   const [arquivo, setArquivo] = useState(null);
 
-  // list
   const [docs, setDocs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ui messages
   const [erro, setErro] = useState("");
   const [okMsg, setOkMsg] = useState("");
 
-  // action states
   const [sending, setSending] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
 
-  // filtros
   const [q, setQ] = useState("");
   const [fTipo, setFTipo] = useState("Todos");
 
-  // 1) checa token ao entrar
   useEffect(() => {
     const t = localStorage.getItem("ippur_token");
     if (!t) {
@@ -92,6 +87,7 @@ export default function AdminTransparenciaPage() {
     setErro("");
     setOkMsg("");
     setLoading(true);
+
     try {
       const data = await listDocumentosTransparencia(tkn);
       setDocs(Array.isArray(data) ? data : []);
@@ -103,7 +99,6 @@ export default function AdminTransparenciaPage() {
     }
   }
 
-  // 2) carrega lista quando token estiver disponível
   useEffect(() => {
     if (token) carregarDocumentos(token);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,11 +106,11 @@ export default function AdminTransparenciaPage() {
 
   const docsFiltrados = useMemo(() => {
     const term = q.trim().toLowerCase();
+
     return docs
       .filter((d) => (fTipo === "Todos" ? true : (d.tipo || "") === fTipo))
       .filter((d) => {
         if (!term) return true;
-        // ✅ inclui comentários na busca
         const text = `${d.titulo || ""} ${d.tipo || ""} ${d.comentarios || ""}`.toLowerCase();
         return text.includes(term);
       });
@@ -131,14 +126,18 @@ export default function AdminTransparenciaPage() {
     if (!arquivo) return setErro("Selecione um arquivo.");
 
     setSending(true);
+
     try {
       const fd = new FormData();
       fd.append("titulo", titulo.trim());
       fd.append("tipo", tipo);
       fd.append("data", data);
-      // ✅ opcional de verdade: só manda se tiver texto
-      if (comentarios?.trim()) fd.append("comentarios", comentarios.trim());
-      fd.append("arquivo", arquivo); // bate com upload.single("arquivo")
+
+      if (comentarios?.trim()) {
+        fd.append("comentarios", comentarios.trim());
+      }
+
+      fd.append("arquivo", arquivo);
 
       await createDocumentoTransparencia(fd, token);
 
@@ -146,7 +145,7 @@ export default function AdminTransparenciaPage() {
       setTitulo("");
       setTipo("Despesa");
       setData("");
-      setComentarios(""); // ✅ limpa comentários
+      setComentarios("");
       setArquivo(null);
 
       await carregarDocumentos(token);
@@ -166,6 +165,7 @@ export default function AdminTransparenciaPage() {
     setErro("");
     setOkMsg("");
     setDeletingId(id);
+
     try {
       await deleteDocumentoTransparencia(id, token);
       setOkMsg("Documento excluído ✅");
@@ -198,7 +198,6 @@ export default function AdminTransparenciaPage() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Upload */}
         <section className="lg:col-span-1 bg-white border rounded-xl p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-neutral-dark mb-4">
             Enviar novo documento
@@ -254,7 +253,6 @@ export default function AdminTransparenciaPage() {
               </div>
             </div>
 
-            {/* ✅ Comentários (opcional) */}
             <div>
               <label className="block text-sm text-neutral-dark mb-1">
                 Comentários (opcional)
@@ -289,7 +287,6 @@ export default function AdminTransparenciaPage() {
           </form>
         </section>
 
-        {/* Lista */}
         <section className="lg:col-span-2 bg-white border rounded-xl p-6 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
             <div>
@@ -340,6 +337,7 @@ export default function AdminTransparenciaPage() {
             <div className="divide-y">
               {docsFiltrados.map((d) => {
                 const fileUrl = buildFileUrl(d.arquivo);
+
                 return (
                   <div
                     key={d.id}
@@ -356,7 +354,6 @@ export default function AdminTransparenciaPage() {
                         </span>
                       </p>
 
-                      {/* ✅ Exibe comentários quando existir */}
                       {d.comentarios ? (
                         <p className="mt-1 text-sm text-neutral-dark/80 whitespace-pre-wrap">
                           {d.comentarios}
