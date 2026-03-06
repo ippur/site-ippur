@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333";
+const API = process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com";
 
 export default function LicitacoesPage() {
   const router = useRouter();
