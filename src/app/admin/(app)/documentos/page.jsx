@@ -6,6 +6,14 @@ import { apiFetch } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com";
 
+function buildFileUrl(filePath) {
+  if (!filePath) return null;
+  if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
+    return filePath;
+  }
+  return `${API}${filePath}`;
+}
+
 export default function DocumentosPage() {
   const router = useRouter();
   const [items, setItems] = useState([]);
@@ -152,7 +160,7 @@ export default function DocumentosPage() {
 
             <div style={{ marginTop: 6 }}>
               {it.arquivo && (
-                <a href={it.arquivo} target="_blank" rel="noreferrer">
+                <a href={buildFileUrl(it.arquivo)} target="_blank" rel="noreferrer">
                   Abrir
                 </a>
               )}
