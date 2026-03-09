@@ -105,9 +105,8 @@ export default function DocumentosPage() {
           />
 
           <input
-            placeholder="Tipo (ex: portaria, decreto, documento...)"
-            value={tipo}
-            onChange={(e) => setTipo(e.target.value)}
+            value="documento"
+            readOnly
           />
 
           <input
