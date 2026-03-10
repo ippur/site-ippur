@@ -7,7 +7,7 @@ export default function HeroBanner() {
   return (
     <section
       className="relative h-[70vh] w-full bg-cover bg-center flex items-center justify-center"
-      style={{ backgroundImage: "url('/banner.jpg')" }}
+      style={{ backgroundImage: "url('/banner.png')" }}
     >
       {/* 🌓 Sobreposição escura */}
       <div className="absolute inset-0 bg-black/50"></div>
