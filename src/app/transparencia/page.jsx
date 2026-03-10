@@ -12,7 +12,7 @@ export default function TransparenciaPage() {
     { titulo: "Dados Abertos", icon: "🗂️", link: "/transparencia/dados-abertos" },
     { titulo: "Despesas e Pagamentos", icon: "💸", link: "/transparencia/despesas" },
     { titulo: "Estrutura Organizacional e Servidores", icon: "🏢", link: "/transparencia/estrutura" },
-    { titulo: "Licitações e Contratos", icon: "📜", link: "/transparencia/licitacoes" },
+    { titulo: "Licitações e Contratos", icon: "📜", link: "/licitacoes" },
     { titulo: "Planejamento e Orçamento", icon: "📊", link: "/transparencia/planejamento" },
     { titulo: "Receitas Públicas", icon: "💰", link: "/transparencia/receitas" },
     { titulo: "Relatórios e Auditorias", icon: "📑", link: "/transparencia/relatorios" },
