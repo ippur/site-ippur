@@ -1,162 +1,119 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { apiFetch } from "@/lib/api";
+import PageBase from "@/components/PageBase";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API =
+  process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com";
 
-export default function LicitacoesPage() {
-  const router = useRouter();
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+function formatDateBR(value) {
+  try {
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return d.toLocaleDateString("pt-BR");
+  } catch {
+    return value;
+  }
+}
 
-  // campos exigidos pelo backend
-  const [titulo, setTitulo] = useState("");
-  const [modalidade, setModalidade] = useState("");
-  const [status, setStatus] = useState("Aberta");
-  const [data, setData] = useState(() => new Date().toISOString().slice(0, 10));
-  const [arquivo, setArquivo] = useState(null);
+function buildFileUrl(filePath) {
+  if (!filePath) return null;
 
-  async function load() {
-    try {
-      const res = await apiFetch(`${API}/api/transparencia/licitacoes`);
-      const data = await res.json();
-      setItems(Array.isArray(data) ? data : []);
-    } catch (e) {
-      if (e.message === "401") router.push("/admin/login");
-    }
+  if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
+    return filePath;
   }
 
+  return `${API}${filePath}`;
+}
+
+export default function LicitacoesPage() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch(`${API}/api/transparencia/licitacoes`, {
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+        setItems(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Erro ao carregar licitações:", error);
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     load();
   }, []);
 
-  async function onUpload(e) {
-    e.preventDefault();
-
-    if (!titulo.trim()) return alert("Informe o título.");
-    if (!modalidade.trim()) return alert("Informe a modalidade.");
-    if (!data) return alert("Informe a data.");
-    if (!arquivo) return alert("Selecione um arquivo.");
-
-    setLoading(true);
-    try {
-      const fd = new FormData();
-      fd.append("titulo", titulo);
-      fd.append("modalidade", modalidade);
-      fd.append("status", status);
-      fd.append("data", data);
-      fd.append("arquivo", arquivo); // campo certo
-
-      const res = await apiFetch(`${API}/api/transparencia/licitacoes`, {
-        method: "POST",
-        body: fd,
-      });
-
-      if (!res.ok) throw new Error("Falha no upload");
-
-      setTitulo("");
-      setModalidade("");
-      setStatus("Aberta");
-      setData(new Date().toISOString().slice(0, 10));
-      setArquivo(null);
-
-      await load();
-      alert("Licitação enviada.");
-    } catch (e) {
-      if (e.message === "401") router.push("/admin/login");
-      else alert("Erro ao enviar licitação.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function onDelete(id) {
-    if (!confirm("Excluir esta licitação?")) return;
-    try {
-      const res = await apiFetch(`${API}/api/transparencia/licitacoes/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Falha ao excluir");
-      await load();
-    } catch {
-      alert("Erro ao excluir.");
-    }
-  }
-
   return (
-    <main>
-      <h1>Upload de Licitações</h1>
+    <PageBase
+      titulo="Licitações"
+      subtitulo="Consulte editais, resultados e documentos oficiais publicados pelo IPPUR."
+    >
+      <section className="bg-white border rounded-xl p-6 shadow-sm">
+        {loading ? (
+          <p className="text-neutral-dark/70">Carregando licitações...</p>
+        ) : items.length === 0 ? (
+          <p className="text-neutral-dark/70">Nenhuma licitação cadastrada.</p>
+        ) : (
+          <div className="divide-y">
+            {items.map((item) => {
+              const fileUrl = buildFileUrl(item.arquivo);
 
-      <form onSubmit={onUpload} style={{ marginTop: 16, marginBottom: 24 }}>
-        <div style={{ display: "grid", gap: 10, maxWidth: 520 }}>
-          <input
-            placeholder="Título"
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-          />
+              return (
+                <div
+                  key={item.id}
+                  className="py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+                >
+                  <div>
+                    <p className="font-semibold text-neutral-dark">{item.titulo}</p>
 
-          <input
-            placeholder="Modalidade (ex: Pregão, Concorrência...)"
-            value={modalidade}
-            onChange={(e) => setModalidade(e.target.value)}
-          />
+                    <p className="text-sm text-neutral-dark/70">
+                      <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs mr-2">
+                        {item.modalidade || "—"}
+                      </span>
 
-          <input
-            placeholder="Status (ex: Aberta, Encerrada...)"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          />
+                      <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs mr-2">
+                        {item.status || "—"}
+                      </span>
 
-          <input
-            type="date"
-            value={data}
-            onChange={(e) => setData(e.target.value)}
-          />
+                      <span className="text-xs">
+                        {item.data ? formatDateBR(item.data) : "—"}
+                      </span>
+                    </p>
 
-          <input
-            type="file"
-            onChange={(e) => setArquivo(e.target.files?.[0] || null)}
-          />
+                    {item.comentarios ? (
+                      <p className="mt-1 text-sm text-neutral-dark/80 whitespace-pre-wrap">
+                        {item.comentarios}
+                      </p>
+                    ) : null}
+                  </div>
 
-          <button disabled={loading}>
-            {loading ? "Enviando..." : "Enviar"}
-          </button>
-        </div>
-      </form>
-
-      <h2>Licitações cadastradas</h2>
-
-      <ul style={{ marginTop: 12 }}>
-        {items.length === 0 && <li>Nenhuma licitação cadastrada.</li>}
-
-        {items.map((it) => (
-          <li key={it.id} style={{ marginBottom: 10 }}>
-            <strong>{it.titulo}</strong>{" "}
-            <small>({it.modalidade} | {it.status})</small>{" "}
-            <small>{new Date(it.data).toLocaleDateString("pt-BR")}</small>
-
-            {it.arquivo && (
-              <a
-                style={{ marginLeft: 12 }}
-                href={`${API}${it.arquivo}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Abrir
-              </a>
-            )}
-
-            <button
-              onClick={() => onDelete(it.id)}
-              style={{ marginLeft: 12, color: "red" }}
-            >
-              Excluir
-            </button>
-          </li>
-        ))}
-      </ul>
-    </main>
+                  <div>
+                    {fileUrl ? (
+                      <a
+                        href={fileUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm font-semibold text-secondary hover:underline"
+                      >
+                        Abrir
+                      </a>
+                    ) : (
+                      <span className="text-sm text-neutral-dark/60">Sem arquivo</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+    </PageBase>
   );
 }
