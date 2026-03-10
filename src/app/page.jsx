@@ -36,22 +36,6 @@ export default function Home() {
 
       <SobreResumo />
 
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <TransparenciaSection
-          titulo="Portal da Transparência"
-          descricao="Acompanhe documentos públicos, licitações, relatórios e outras informações institucionais do IPPUR."
-        >
-          <div className="flex justify-center">
-            <a
-              href="/transparencia"
-              className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition"
-            >
-              Acessar Portal da Transparência
-            </a>
-          </div>
-        </TransparenciaSection>
-      </section>
-
       <section className="max-w-7xl mx-auto px-4 py-20">
         <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary-dark mb-12 text-center">
           Últimas Notícias
