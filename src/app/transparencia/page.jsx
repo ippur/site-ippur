@@ -57,10 +57,7 @@ export default function TransparenciaPage() {
                 </p>
                 <p className="text-sm text-neutral-dark mb-4">
                   {secao.desc}
-                </p>
-                <span className="inline-flex items-center rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark transition">
-                  Acessar
-                </span>
+                </p>                
               </a>
             ) : (
               <Link
