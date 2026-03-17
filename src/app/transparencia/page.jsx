@@ -6,6 +6,14 @@ import { motion } from "framer-motion";
 
 export default function TransparenciaPage() {
   const secoes = [
+    {
+      titulo: "Transparência RH",
+      icon: "👥",
+      desc: "Consulte servidores, diárias e demais dados públicos disponibilizados à população.",
+      href: "https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172",
+      externo: true,
+      destaque: true,
+    },
     { titulo: "Acesso à Informação", icon: "📬", link: "/transparencia/acesso-informacao" },
     { titulo: "Audiências e Participação Popular", icon: "🗣️", link: "/transparencia/audiencias" },
     { titulo: "Convênios e Parcerias", icon: "🤝", link: "/transparencia/convenios" },
@@ -23,30 +31,6 @@ export default function TransparenciaPage() {
       titulo="Portal da Transparência"
       subtitulo="Acompanhe informações e documentos oficiais do IPPUR em atendimento à Lei de Acesso à Informação."
     >
-      {/* 🔥 BLOCO RPM */}
-      <div className="mb-12">
-        <div className="bg-white border border-neutral-light rounded-xl shadow-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold text-primary-dark mb-2">
-              Transparência de Recursos Humanos
-            </h2>
-            <p className="text-neutral-dark">
-              Consulte informações públicas relacionadas aos servidores, diárias e demais dados disponibilizados à população.
-            </p>
-          </div>
-
-          <a
-            href="https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition whitespace-nowrap"
-          >
-            Acessar Transparência RH
-          </a>
-        </div>
-      </div>
-
-      {/* GRID EXISTENTE */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {secoes.map((secao, i) => (
           <motion.div
@@ -56,15 +40,39 @@ export default function TransparenciaPage() {
             transition={{ duration: 0.4 }}
             viewport={{ once: true }}
           >
-            <Link
-              href={secao.link}
-              className="bg-white border border-neutral-light rounded-xl shadow-card hover:shadow-smooth transition-shadow p-6 text-center flex flex-col items-center"
-            >
-              <span className="text-4xl mb-3">{secao.icon}</span>
-              <p className="text-lg font-semibold text-primary-dark mb-1">
-                {secao.titulo}
-              </p>
-            </Link>
+            {secao.externo ? (
+              <a
+                href={secao.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`bg-white border rounded-xl shadow-card hover:shadow-smooth transition-shadow p-6 text-center flex flex-col items-center h-full ${
+                  secao.destaque
+                    ? "border-secondary bg-secondary/5"
+                    : "border-neutral-light"
+                }`}
+              >
+                <span className="text-4xl mb-3">{secao.icon}</span>
+                <p className="text-lg font-semibold text-primary-dark mb-2">
+                  {secao.titulo}
+                </p>
+                <p className="text-sm text-neutral-dark mb-4">
+                  {secao.desc}
+                </p>
+                <span className="inline-flex items-center rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary-dark transition">
+                  Acessar
+                </span>
+              </a>
+            ) : (
+              <Link
+                href={secao.link}
+                className="bg-white border border-neutral-light rounded-xl shadow-card hover:shadow-smooth transition-shadow p-6 text-center flex flex-col items-center h-full"
+              >
+                <span className="text-4xl mb-3">{secao.icon}</span>
+                <p className="text-lg font-semibold text-primary-dark mb-1">
+                  {secao.titulo}
+                </p>
+              </Link>
+            )}
           </motion.div>
         ))}
       </div>
