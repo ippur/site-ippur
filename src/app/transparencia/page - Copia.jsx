@@ -23,30 +23,6 @@ export default function TransparenciaPage() {
       titulo="Portal da Transparência"
       subtitulo="Acompanhe informações e documentos oficiais do IPPUR em atendimento à Lei de Acesso à Informação."
     >
-      {/* 🔥 BLOCO RPM */}
-      <div className="mb-12">
-        <div className="bg-white border border-neutral-light rounded-xl shadow-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold text-primary-dark mb-2">
-              Transparência de Recursos Humanos
-            </h2>
-            <p className="text-neutral-dark">
-              Consulte informações públicas relacionadas aos servidores, diárias e demais dados disponibilizados à população.
-            </p>
-          </div>
-
-          <a
-            href="https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition whitespace-nowrap"
-          >
-            Acessar Transparência RH
-          </a>
-        </div>
-      </div>
-
-      {/* GRID EXISTENTE */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {secoes.map((secao, i) => (
           <motion.div

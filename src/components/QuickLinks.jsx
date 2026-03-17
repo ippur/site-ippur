@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Newspaper, FileText, Phone, Info, Scale, Building2, User, Shield } from "lucide-react";
+import { Newspaper, FileText, Phone, Info, Scale, Building2, User } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function QuickLinks() {
@@ -37,28 +37,20 @@ export default function QuickLinks() {
     },
     {
       id: 5,
-      icon: <Shield className="w-8 h-8 text-primary" />,
-      title: "Transparência RH",
-      desc: "Consulta pública de servidores, diárias e outras informações.",
-      href: "https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172",
-      externo: true,
-    },
-    {
-      id: 6,
       icon: <Info className="w-8 h-8 text-primary" />,
       title: "Sobre o IPPUR",
       desc: "Saiba mais sobre nossa missão e estrutura.",
       href: "/sobre",
     },
     {
-      id: 7,
+      id: 6,
       icon: <Phone className="w-8 h-8 text-primary" />,
       title: "Contatos",
       desc: "Fale conosco e tire suas dúvidas.",
       href: "/contatos",
     },
     {
-      id: 8,
+      id: 7,
       icon: <Building2 className="w-8 h-8 text-primary" />,
       title: "Projetos",
       desc: "Conheça as obras e iniciativas em andamento.",
