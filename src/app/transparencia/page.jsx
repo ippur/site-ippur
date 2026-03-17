@@ -18,8 +18,8 @@ export default function TransparenciaPage() {
     { titulo: "Relatórios e Auditorias", icon: "📑", link: "/transparencia/relatorios" },
     { titulo: "REURB", 
       icon: "🏗️", 
-      link: "/transparencia/reurb" },
-      destaque: true,
+      link: "/transparencia/reurb",
+      destaque: true },
     {
       titulo: "Transparência RH",
       icon: "👥",
