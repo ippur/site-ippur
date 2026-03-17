@@ -10,18 +10,19 @@ import {
 } from "@/lib/api";
 
 const TIPOS = [
-  "Receita",
-  "Despesa",
-  "Relatorio",
-  "Contrato",
-  "Licitacao",
-  "Convenio",
-  "Orcamento",
-  "Auditoria",
-  "Estrutura",
-  "DadosAbertos",
   "AcessoInformacao",
   "Audiencia",
+  "Auditoria",
+  "Convenio",
+  "Contrato",
+  "DadosAbertos",
+  "Despesa",
+  "Estrutura",
+  "Licitacao",
+  "Orcamento",
+  "Receita",
+  "REURB",
+  "Relatorio",
   "Outros",
 ];
 

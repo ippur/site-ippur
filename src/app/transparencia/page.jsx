@@ -16,6 +16,7 @@ export default function TransparenciaPage() {
     { titulo: "Planejamento e Orçamento", icon: "📊", link: "/transparencia/planejamento" },
     { titulo: "Receitas Públicas", icon: "💰", link: "/transparencia/receitas" },
     { titulo: "Relatórios e Auditorias", icon: "📑", link: "/transparencia/relatorios" },
+    { titulo: "REURB", icon: "🏗️", link: "/transparencia/reurb" },
     {
       titulo: "Transparência RH",
       icon: "👥",
