@@ -6,14 +6,6 @@ import { motion } from "framer-motion";
 
 export default function TransparenciaPage() {
   const secoes = [
-    {
-      titulo: "Transparência RH",
-      icon: "👥",
-      desc: "Consulte servidores, diárias e demais dados públicos disponibilizados à população.",
-      href: "https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172",
-      externo: true,
-      destaque: true,
-    },
     { titulo: "Acesso à Informação", icon: "📬", link: "/transparencia/acesso-informacao" },
     { titulo: "Audiências e Participação Popular", icon: "🗣️", link: "/transparencia/audiencias" },
     { titulo: "Convênios e Parcerias", icon: "🤝", link: "/transparencia/convenios" },
@@ -24,6 +16,14 @@ export default function TransparenciaPage() {
     { titulo: "Planejamento e Orçamento", icon: "📊", link: "/transparencia/planejamento" },
     { titulo: "Receitas Públicas", icon: "💰", link: "/transparencia/receitas" },
     { titulo: "Relatórios e Auditorias", icon: "📑", link: "/transparencia/relatorios" },
+    {
+      titulo: "Transparência RH",
+      icon: "👥",
+      desc: "Consulte servidores, diárias e demais dados públicos disponibilizados à população.",
+      href: "https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172",
+      externo: true,
+      destaque: true,
+    },
   ];
 
   return (
