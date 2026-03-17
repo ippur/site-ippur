@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Newspaper, FileText, Phone, Info, Scale, Building2, User, Shield } from "lucide-react";
+import { Newspaper, FileText, Phone, Info, Scale, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function QuickLinks() {
@@ -29,40 +29,24 @@ export default function QuickLinks() {
     },
     {
       id: 4,
-      icon: <User className="w-8 h-8 text-primary" />,
-      title: "Portal do Servidor",
-      desc: "Acesso a contracheques e Cédulas C (2026 / ano-calendário 2025).",
-      href: "https://folha.rpmsolucoes.com.br/login?cnpj=16366277000172",
-      externo: true,
-    },
-    {
-      id: 5,
-      icon: <Shield className="w-8 h-8 text-primary" />,
-      title: "Transparência RH",
-      desc: "Consulta pública de servidores, diárias e outras informações.",
-      href: "https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172",
-      externo: true,
-    },
-    {
-      id: 6,
       icon: <Info className="w-8 h-8 text-primary" />,
       title: "Sobre o IPPUR",
       desc: "Saiba mais sobre nossa missão e estrutura.",
       href: "/sobre",
     },
     {
-      id: 7,
+      id: 5,
       icon: <Phone className="w-8 h-8 text-primary" />,
       title: "Contatos",
       desc: "Fale conosco e tire suas dúvidas.",
       href: "/contatos",
     },
     {
-      id: 8,
+      id: 6,
       icon: <Building2 className="w-8 h-8 text-primary" />,
       title: "Projetos",
       desc: "Conheça as obras e iniciativas em andamento.",
-      href: "#",
+      href: "#", // poderá futuramente levar a /projetos
     },
   ];
 
@@ -83,24 +67,11 @@ export default function QuickLinks() {
               transition={{ duration: 0.4, delay: i * 0.1 }}
               viewport={{ once: true }}
             >
-              {item.externo ? (
-                <a
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex flex-col items-center space-y-4"
-                >
-                  <div className="bg-primary/10 p-4 rounded-full">{item.icon}</div>
-                  <h3 className="text-xl font-semibold text-primary">{item.title}</h3>
-                  <p className="text-neutral-dark text-sm">{item.desc}</p>
-                </a>
-              ) : (
-                <Link href={item.href} className="flex flex-col items-center space-y-4">
-                  <div className="bg-primary/10 p-4 rounded-full">{item.icon}</div>
-                  <h3 className="text-xl font-semibold text-primary">{item.title}</h3>
-                  <p className="text-neutral-dark text-sm">{item.desc}</p>
-                </Link>
-              )}
+              <Link href={item.href} className="flex flex-col items-center space-y-4">
+                <div className="bg-primary/10 p-4 rounded-full">{item.icon}</div>
+                <h3 className="text-xl font-semibold text-primary">{item.title}</h3>
+                <p className="text-neutral-dark text-sm">{item.desc}</p>
+              </Link>
             </motion.div>
           ))}
         </div>
