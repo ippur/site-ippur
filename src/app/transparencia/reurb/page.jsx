@@ -2,32 +2,27 @@
 
 import { useEffect, useState } from "react";
 import PageBase from "@/components/PageBase";
+import TransparenciaSection from "@/components/TransparenciaSection";
+import { fetchTransparencia } from "@/services/api";
 
 export default function ReurbPage() {
   const [docs, setDocs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function carregarDocs() {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/transparencia?tipo=REURB`,
-          { cache: "no-store" }
-        );
+  async function carregar() {
+    const data = await fetchTransparencia();
 
-        if (!res.ok) {
-          throw new Error("Erro ao buscar documentos REURB");
-        }
+    const filtrados = (data || []).filter((doc) =>
+      (doc.tipo || "").toUpperCase() === "REURB"
+    );
 
-        const data = await res.json();
-        setDocs(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Erro ao carregar REURB:", error);
-        setDocs([]);
-      } finally {
-        setLoading(false);
-      }
-    }
+    setDocs(filtrados);
+    setLoading(false);
+  }
+
+  carregar();
+}, []);
 
     carregarDocs();
   }, []);
