@@ -6,19 +6,25 @@ import Link from "next/link";
 import PageBase from "@/components/PageBase";
 
 export default function NoticiaDetalhePage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id;
+
   const [noticia, setNoticia] = useState(null);
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     async function carregarNoticia() {
       try {
+        if (!id) return;
+
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/noticias/${id}`,
           { cache: "no-store" }
         );
 
-        if (!res.ok) throw new Error("Erro ao carregar notícia");
+        if (!res.ok) {
+          throw new Error(`Erro ao carregar notícia: ${res.status}`);
+        }
 
         const data = await res.json();
         setNoticia(data);
@@ -30,9 +36,7 @@ export default function NoticiaDetalhePage() {
       }
     }
 
-    if (id) {
-      carregarNoticia();
-    }
+    carregarNoticia();
   }, [id]);
 
   if (carregando) {
@@ -49,7 +53,6 @@ export default function NoticiaDetalhePage() {
         <p className="text-center text-neutral-medium mb-6">
           Notícia não encontrada.
         </p>
-
         <div className="text-center">
           <Link
             href="/noticias"
