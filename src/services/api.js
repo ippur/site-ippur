@@ -12,6 +12,20 @@ export async function fetchNoticias() {
   }
 }
 
+export async function fetchNoticia(id) {
+  try {
+    const response = await fetch(`${API_BASE}/noticias/${id}`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) throw new Error("Erro ao buscar notícia");
+    return await response.json();
+  } catch (error) {
+    console.error("Erro na API (notícia):", error);
+    return null;
+  }
+}
+
 export async function fetchLicitacoes() {
   try {
     const response = await fetch(`${API_BASE}/licitacoes`);

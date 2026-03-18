@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import PageBase from "@/components/PageBase";
+import { fetchNoticia } from "@/services/api";
 
 export default function NoticiaDetalhePage() {
   const params = useParams();
@@ -17,16 +18,7 @@ export default function NoticiaDetalhePage() {
       try {
         if (!id) return;
 
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/noticias/${id}`,
-          { cache: "no-store" }
-        );
-
-        if (!res.ok) {
-          throw new Error(`Erro ao carregar notícia: ${res.status}`);
-        }
-
-        const data = await res.json();
+        const data = await fetchNoticia(id);
         setNoticia(data);
       } catch (error) {
         console.error("Erro ao carregar notícia:", error);
@@ -53,6 +45,7 @@ export default function NoticiaDetalhePage() {
         <p className="text-center text-neutral-medium mb-6">
           Notícia não encontrada.
         </p>
+
         <div className="text-center">
           <Link
             href="/noticias"
