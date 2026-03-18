@@ -13,26 +13,18 @@ export default function NoticiaDetalhePage() {
   useEffect(() => {
     async function carregarNoticia() {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/noticias/${id}`,
-          { cache: "no-store" }
-        );
-
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noticias/${id}`);
         if (!res.ok) throw new Error("Erro ao carregar notícia");
-
         const data = await res.json();
         setNoticia(data);
       } catch (error) {
-        console.error("Erro ao carregar notícia:", error);
-        setNoticia(null);
+        console.error(error);
       } finally {
         setCarregando(false);
       }
     }
 
-    if (id) {
-      carregarNoticia();
-    }
+    carregarNoticia();
   }, [id]);
 
   if (carregando) {
@@ -49,7 +41,6 @@ export default function NoticiaDetalhePage() {
         <p className="text-center text-neutral-medium mb-6">
           Notícia não encontrada.
         </p>
-
         <div className="text-center">
           <Link
             href="/noticias"
@@ -63,11 +54,8 @@ export default function NoticiaDetalhePage() {
   }
 
   return (
-    <PageBase
-      titulo={noticia.titulo}
-      subtitulo={noticia.resumo || "Acompanhe os detalhes desta notícia."}
-    >
-      <div className="max-w-3xl mx-auto px-4 py-2">
+    <PageBase titulo={noticia.titulo} subtitulo={noticia.subtitulo}>
+      <div className="max-w-3xl mx-auto p-4">
         {noticia.imagem && (
           <img
             src={noticia.imagem}
@@ -76,18 +64,9 @@ export default function NoticiaDetalhePage() {
           />
         )}
 
-        <div className="text-sm text-neutral-dark mb-6">
-          {noticia.criadoEm
-            ? new Date(noticia.criadoEm).toLocaleDateString("pt-BR")
-            : ""}
-        </div>
-
-        <div
-          className="prose max-w-none text-neutral-700"
-          dangerouslySetInnerHTML={{
-            __html: noticia.conteudo || "<p>Sem conteúdo disponível.</p>",
-          }}
-        />
+        <p className="text-justify leading-relaxed text-neutral-700 whitespace-pre-line">
+          {noticia.conteudo}
+        </p>
 
         <div className="text-center mt-8">
           <Link

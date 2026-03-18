@@ -12,35 +12,29 @@ export default function CardNoticia({ noticia }) {
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
     >
+      {/* 🖼️ Imagem da notícia */}
       <div className="relative h-56 w-full overflow-hidden">
-        {noticia.imagem ? (
-          <img
-            src={noticia.imagem}
-            alt={noticia.titulo}
-            className="h-full w-full object-cover transform hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="h-full w-full bg-neutral-light flex items-center justify-center text-neutral-dark">
-            Sem imagem
-          </div>
-        )}
-
+        <img
+          src={noticia.imagem}
+          alt={noticia.titulo}
+          className="h-full w-full object-cover transform hover:scale-105 transition-transform duration-500"
+        />
+        {/* 🔹 Etiqueta “Notícia” */}
         <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
           Notícia
         </span>
       </div>
 
+      {/* 📰 Conteúdo */}
       <div className="p-6 flex flex-col justify-between">
         <h3 className="text-xl font-semibold text-primary-dark mb-2">
           {noticia.titulo}
         </h3>
-
         <p className="text-neutral-dark text-sm leading-relaxed mb-4">
           {noticia.resumo}
         </p>
-
         <Link
-          href={`/noticias/${noticia.id}`}
+          href="/noticias"
           className="self-start text-sm font-medium text-secondary hover:text-secondary-light transition-colors"
         >
           Ler mais →

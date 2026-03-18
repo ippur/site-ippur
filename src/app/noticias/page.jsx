@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import PageBase from "@/components/PageBase";
 import CardNoticia from "@/components/CardNoticia";
+import { fetchNoticias } from "@/services/api";
 
 export default function Noticias() {
   const [noticias, setNoticias] = useState([]);
@@ -11,12 +12,11 @@ export default function Noticias() {
   useEffect(() => {
     async function carregarNoticias() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noticias`);
-        if (!res.ok) throw new Error("Erro ao buscar notícias");
-        const data = await res.json();
-        setNoticias(data);
+        const data = await fetchNoticias();
+        setNoticias(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Erro ao carregar notícias:", error);
+        setNoticias([]);
       } finally {
         setCarregando(false);
       }
