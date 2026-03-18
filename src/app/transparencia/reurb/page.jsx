@@ -10,65 +10,83 @@ export default function ReurbPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  async function carregar() {
-    const data = await fetchTransparencia();
+    async function carregar() {
+      const data = await fetchTransparencia();
 
-    const filtrados = (data || []).filter((doc) =>
-      (doc.tipo || "").toUpperCase() === "REURB"
-    );
+      const filtrados = (data || []).filter(
+        (doc) => (doc.tipo || "").toUpperCase() === "REURB"
+      );
 
-    setDocs(filtrados);
-    setLoading(false);
-  }
+      setDocs(filtrados);
+      setLoading(false);
+    }
 
-  carregar();
-}, []);
-
-    carregarDocs();
+    carregar();
   }, []);
+
+  const formatarData = (dataStr) => {
+    if (!dataStr) return "-";
+    return new Date(dataStr).toLocaleDateString("pt-BR");
+  };
 
   return (
     <PageBase
       titulo="REURB"
       subtitulo="Regularização Fundiária Urbana - documentos e editais."
     >
-      {loading ? (
-        <p className="text-center text-gray-500">Carregando documentos...</p>
-      ) : docs.length === 0 ? (
-        <p className="text-center text-gray-500">Nenhum documento disponível.</p>
-      ) : (
-        <div className="space-y-4">
-          {docs.map((doc) => (
-            <div
-              key={doc.id}
-              className="bg-white border border-neutral-light rounded-xl shadow-card p-6"
-            >
-              <h3 className="text-lg font-semibold text-primary-dark mb-2">
-                {doc.titulo}
-              </h3>
+      <TransparenciaSection
+        titulo="Documentos REURB"
+        descricao="Nesta seção são disponibilizados editais, notificações e documentos relacionados à Regularização Fundiária Urbana."
+      >
+        {loading ? (
+          <p className="text-center text-gray-500">Carregando documentos...</p>
+        ) : docs.length === 0 ? (
+          <p className="text-center text-gray-500">
+            Nenhum documento cadastrado no momento.
+          </p>
+        ) : (
+          <ul className="divide-y divide-neutral-light">
+            {docs.map((doc) => {
+              const linkArquivo = doc.arquivo
+                ? doc.arquivo.startsWith("http")
+                  ? doc.arquivo
+                  : `https://backend-site-eq0r.onrender.com${doc.arquivo}`
+                : null;
 
-              <p className="text-sm text-gray-500 mb-2">
-                {new Date(doc.data).toLocaleDateString("pt-BR")}
-              </p>
-
-              {doc.comentarios && (
-                <p className="text-neutral-dark mb-4">{doc.comentarios}</p>
-              )}
-
-              {doc.arquivo && (
-                <a
-                  href={doc.arquivo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block text-primary font-medium hover:underline"
+              return (
+                <li
+                  key={doc.id}
+                  className="py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
                 >
-                  Ver documento
-                </a>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+                  <div>
+                    <p className="font-semibold text-primary-dark">
+                      {doc.titulo}
+                    </p>
+                    <p className="text-xs text-neutral-dark">
+                      {formatarData(doc.data)} • {doc.tipo || "REURB"}
+                    </p>
+                  </div>
+
+                  <div>
+                    {linkArquivo ? (
+                      <a
+                        href={linkArquivo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-secondary font-medium hover:text-secondary-light underline underline-offset-2 text-sm"
+                      >
+                        Baixar PDF
+                      </a>
+                    ) : (
+                      <span className="text-gray-400 text-sm">Sem arquivo</span>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </TransparenciaSection>
     </PageBase>
   );
 }
