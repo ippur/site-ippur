@@ -7,16 +7,12 @@ import { createNoticia } from "@/lib/api";
 
 export default function AdminNovaNoticiaPage() {
   const router = useRouter();
-  const token = useMemo(
-    () => (typeof window === "undefined" ? "" : localStorage.getItem("ippur_token") || ""),
-    []
-  );
+  const token = useMemo(() => (typeof window === "undefined" ? "" : localStorage.getItem("ippur_token") || ""), []);
 
   const [titulo, setTitulo] = useState("");
   const [resumo, setResumo] = useState("");
   const [conteudo, setConteudo] = useState("");
   const [imagem, setImagem] = useState(null);
-  const [galeria, setGaleria] = useState([]);
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -35,16 +31,7 @@ export default function AdminNovaNoticiaPage() {
       fd.append("titulo", titulo);
       fd.append("resumo", resumo);
       fd.append("conteudo", conteudo);
-
-      if (imagem) {
-        fd.append("imagem", imagem);
-      }
-
-      if (galeria.length > 0) {
-        galeria.forEach((arquivo) => {
-          fd.append("galeria", arquivo);
-        });
-      }
+      if (imagem) fd.append("imagem", imagem);
 
       await createNoticia(fd, token);
       router.push("/admin/noticias");
@@ -56,10 +43,7 @@ export default function AdminNovaNoticiaPage() {
   }
 
   return (
-    <PageBase
-      titulo="Admin • Nova Notícia"
-      subtitulo="Publique uma nova notícia no portal"
-    >
+    <PageBase titulo="Admin • Nova Notícia" subtitulo="Publique uma nova notícia no portal">
       <div className="max-w-3xl mx-auto bg-white border rounded-xl p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -83,9 +67,7 @@ export default function AdminNovaNoticiaPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-neutral-dark mb-1">
-              Conteúdo (HTML)
-            </label>
+            <label className="block text-sm text-neutral-dark mb-1">Conteúdo (HTML)</label>
             <textarea
               className="w-full border rounded-lg p-2 min-h-[180px]"
               value={conteudo}
@@ -93,49 +75,18 @@ export default function AdminNovaNoticiaPage() {
               placeholder="<p>Digite aqui...</p>"
             />
             <p className="text-xs text-neutral-dark/60 mt-1">
-              Dica: use tags simples como &lt;p&gt;, &lt;strong&gt;, &lt;br/&gt; e &lt;ul&gt;.
+              Dica: use tags simples como &lt;p&gt;, &lt;strong&gt; e &lt;ul&gt;.
             </p>
           </div>
 
           <div>
-            <label className="block text-sm text-neutral-dark mb-1">
-              Imagem principal (opcional)
-            </label>
+            <label className="block text-sm text-neutral-dark mb-1">Imagem (opcional)</label>
             <input
               className="w-full border rounded-lg p-2"
               type="file"
               accept="image/*"
               onChange={(e) => setImagem(e.target.files?.[0] || null)}
             />
-            <p className="text-xs text-neutral-dark/60 mt-1">
-              Essa imagem será usada como capa da notícia.
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm text-neutral-dark mb-1">
-              Galeria de imagens (opcional)
-            </label>
-            <input
-              className="w-full border rounded-lg p-2"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => setGaleria(Array.from(e.target.files || []))}
-            />
-            <p className="text-xs text-neutral-dark/60 mt-1">
-              Você pode selecionar várias imagens para exibir na galeria da notícia.
-            </p>
-
-            {galeria.length > 0 && (
-              <ul className="mt-3 text-sm text-neutral-dark space-y-1">
-                {galeria.map((arquivo, index) => (
-                  <li key={`${arquivo.name}-${index}`}>
-                    {arquivo.name}
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
 
           {erro && <p className="text-sm text-red-600">{erro}</p>}

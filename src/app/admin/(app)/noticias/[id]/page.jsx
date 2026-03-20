@@ -10,7 +10,10 @@ export default function AdminEditarNoticiaPage() {
   const params = useParams();
   const id = params?.id;
 
-  const token = useMemo(() => (typeof window === "undefined" ? "" : localStorage.getItem("ippur_token") || ""), []);
+  const token = useMemo(
+    () => (typeof window === "undefined" ? "" : localStorage.getItem("ippur_token") || ""),
+    []
+  );
 
   const [loading, setLoading] = useState(true);
   const [salvando, setSalvando] = useState(false);
@@ -21,6 +24,8 @@ export default function AdminEditarNoticiaPage() {
   const [conteudo, setConteudo] = useState("");
   const [imagemAtual, setImagemAtual] = useState("");
   const [novaImagem, setNovaImagem] = useState(null);
+  const [galeriaAtual, setGaleriaAtual] = useState([]);
+  const [novaGaleria, setNovaGaleria] = useState([]);
 
   useEffect(() => {
     if (!token) {
@@ -31,12 +36,15 @@ export default function AdminEditarNoticiaPage() {
     async function carregar() {
       setErro("");
       setLoading(true);
+
       try {
         const data = await getNoticiaById(id);
+
         setTitulo(data?.titulo || "");
         setResumo(data?.resumo || "");
         setConteudo(data?.conteudo || "");
         setImagemAtual(data?.imagem || "");
+        setGaleriaAtual(Array.isArray(data?.galeria) ? data.galeria : []);
       } catch (e) {
         setErro(e?.message || "Erro ao carregar notícia.");
       } finally {
@@ -54,12 +62,22 @@ export default function AdminEditarNoticiaPage() {
 
     setErro("");
     setSalvando(true);
+
     try {
       const fd = new FormData();
       fd.append("titulo", titulo);
       fd.append("resumo", resumo);
       fd.append("conteudo", conteudo);
-      if (novaImagem) fd.append("imagem", novaImagem);
+
+      if (novaImagem) {
+        fd.append("imagem", novaImagem);
+      }
+
+      if (novaGaleria.length > 0) {
+        novaGaleria.forEach((arquivo) => {
+          fd.append("galeria", arquivo);
+        });
+      }
 
       await updateNoticia(id, fd, token);
       router.push("/admin/noticias");
@@ -71,7 +89,10 @@ export default function AdminEditarNoticiaPage() {
   }
 
   return (
-    <PageBase titulo="Admin • Editar Notícia" subtitulo="Atualize o conteúdo publicado">
+    <PageBase
+      titulo="Admin • Editar Notícia"
+      subtitulo="Atualize o conteúdo publicado"
+    >
       <div className="max-w-3xl mx-auto bg-white border rounded-xl p-6 shadow-sm">
         {loading ? (
           <p className="text-sm text-neutral-dark/70">Carregando...</p>
@@ -79,7 +100,12 @@ export default function AdminEditarNoticiaPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm text-neutral-dark mb-1">Título</label>
-              <input className="w-full border rounded-lg p-2" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
+              <input
+                className="w-full border rounded-lg p-2"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                required
+              />
             </div>
 
             <div>
@@ -93,7 +119,9 @@ export default function AdminEditarNoticiaPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-neutral-dark mb-1">Conteúdo (HTML)</label>
+              <label className="block text-sm text-neutral-dark mb-1">
+                Conteúdo (HTML)
+              </label>
               <textarea
                 className="w-full border rounded-lg p-2 min-h-[180px]"
                 value={conteudo}
@@ -102,14 +130,25 @@ export default function AdminEditarNoticiaPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-neutral-dark mb-1">Imagem</label>
+              <label className="block text-sm text-neutral-dark mb-1">
+                Imagem principal
+              </label>
 
               {imagemAtual ? (
-                <p className="text-xs text-neutral-dark/70 mb-2">
-                  Imagem atual: <span className="font-semibold">{imagemAtual}</span>
-                </p>
+                <div className="mb-3">
+                  <p className="text-xs text-neutral-dark/70 mb-2">
+                    Imagem atual:
+                  </p>
+                  <img
+                    src={imagemAtual}
+                    alt="Imagem atual"
+                    className="w-full max-w-sm rounded-lg border"
+                  />
+                </div>
               ) : (
-                <p className="text-xs text-neutral-dark/70 mb-2">Sem imagem cadastrada.</p>
+                <p className="text-xs text-neutral-dark/70 mb-2">
+                  Sem imagem cadastrada.
+                </p>
               )}
 
               <input
@@ -121,6 +160,49 @@ export default function AdminEditarNoticiaPage() {
               <p className="text-xs text-neutral-dark/60 mt-1">
                 Se não escolher arquivo, a imagem atual será mantida.
               </p>
+            </div>
+
+            <div>
+              <label className="block text-sm text-neutral-dark mb-1">
+                Galeria atual
+              </label>
+
+              {galeriaAtual.length === 0 ? (
+                <p className="text-xs text-neutral-dark/70 mb-2">
+                  Nenhuma imagem cadastrada na galeria.
+                </p>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
+                  {galeriaAtual.map((img) => (
+                    <img
+                      key={img.id}
+                      src={img.url}
+                      alt="Imagem da galeria"
+                      className="rounded-lg border w-full h-28 object-cover"
+                    />
+                  ))}
+                </div>
+              )}
+
+              <input
+                className="w-full border rounded-lg p-2"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => setNovaGaleria(Array.from(e.target.files || []))}
+              />
+
+              <p className="text-xs text-neutral-dark/60 mt-1">
+                Você pode selecionar várias novas imagens para adicionar à galeria.
+              </p>
+
+              {novaGaleria.length > 0 && (
+                <ul className="mt-3 text-sm text-neutral-dark space-y-1">
+                  {novaGaleria.map((arquivo, index) => (
+                    <li key={`${arquivo.name}-${index}`}>{arquivo.name}</li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             {erro && <p className="text-sm text-red-600">{erro}</p>}
