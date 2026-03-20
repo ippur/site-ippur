@@ -47,10 +47,10 @@ export default function TransparenciaPage() {
                 href={secao.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`bg-white border rounded-xl shadow-card hover:shadow-smooth transition-all p-6 text-center flex flex-col items-center justify-center h-full min-h-[210px] cursor-pointer hover:scale-[1.02] ${
+                className={`bg-white border rounded-xl shadow-card hover:shadow-smooth transition-all duration-300 p-6 text-center flex flex-col items-center justify-center h-full min-h-[210px] cursor-pointer hover:scale-[1.02] hover:-translate-y-1 ${
                   secao.destaque
                     ? "border-secondary bg-secondary/5 hover:border-secondary"
-                    : "border-neutral-light hover:border-secondary"
+                    : "border-neutral-medium hover:border-secondary"
                 }`}
               >
                 <span className="text-4xl mb-3">{secao.icon}</span>
@@ -64,7 +64,7 @@ export default function TransparenciaPage() {
             ) : (
               <Link
                 href={secao.link}
-                className="bg-white border border-neutral-light rounded-xl shadow-card hover:shadow-smooth transition-all p-6 text-center flex flex-col items-center justify-center h-full min-h-[210px] cursor-pointer hover:scale-[1.02] hover:border-secondary"
+                className="bg-white border border-neutral-medium rounded-xl shadow-card hover:shadow-smooth transition-all duration-300 p-6 text-center flex flex-col items-center justify-center h-full min-h-[210px] cursor-pointer hover:scale-[1.02] hover:-translate-y-1 hover:border-secondary"
               >
                 <span className="text-4xl mb-3">{secao.icon}</span>
                 <p className="text-lg font-semibold text-primary-dark">
