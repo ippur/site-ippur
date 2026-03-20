@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import PageBase from "@/components/PageBase";
-import { getNoticiaById, updateNoticia, deleteImagemGaleriaNoticia } from "@/lib/api";
+import { getNoticiaById, updateNoticia } from "@/lib/api";
 
 export default function AdminEditarNoticiaPage() {
   const router = useRouter();
@@ -18,7 +18,6 @@ export default function AdminEditarNoticiaPage() {
   const [loading, setLoading] = useState(true);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
-  const [removendoImagemId, setRemovendoImagemId] = useState(null);
 
   const [titulo, setTitulo] = useState("");
   const [resumo, setResumo] = useState("");
@@ -80,29 +79,12 @@ export default function AdminEditarNoticiaPage() {
         });
       }
 
-      await updateNoticia(id, fd);
+      await updateNoticia(id, fd, token);
       router.push("/admin/noticias");
     } catch (e) {
       setErro(e?.message || "Falha ao atualizar notícia.");
     } finally {
       setSalvando(false);
-    }
-  }
-
-  async function handleExcluirImagem(imagemId) {
-    const confirmar = window.confirm("Deseja realmente excluir esta imagem da galeria?");
-    if (!confirmar) return;
-
-    setErro("");
-    setRemovendoImagemId(imagemId);
-
-    try {
-      await deleteImagemGaleriaNoticia(id, imagemId);
-      setGaleriaAtual((prev) => prev.filter((img) => img.id !== imagemId));
-    } catch (e) {
-      setErro(e?.message || "Falha ao excluir imagem da galeria.");
-    } finally {
-      setRemovendoImagemId(null);
     }
   }
 
@@ -192,27 +174,12 @@ export default function AdminEditarNoticiaPage() {
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
                   {galeriaAtual.map((img) => (
-                    <div
+                    <img
                       key={img.id}
-                      className="border rounded-lg overflow-hidden bg-white"
-                    >
-                      <img
-                        src={img.url}
-                        alt="Imagem da galeria"
-                        className="w-full h-28 object-cover"
-                      />
-
-                      <div className="p-2">
-                        <button
-                          type="button"
-                          onClick={() => handleExcluirImagem(img.id)}
-                          disabled={removendoImagemId === img.id}
-                          className="w-full text-sm bg-red-600 text-white rounded-md px-3 py-2 hover:bg-red-700 disabled:opacity-60"
-                        >
-                          {removendoImagemId === img.id ? "Excluindo..." : "Excluir"}
-                        </button>
-                      </div>
-                    </div>
+                      src={img.url}
+                      alt="Imagem da galeria"
+                      className="rounded-lg border w-full h-28 object-cover"
+                    />
                   ))}
                 </div>
               )}

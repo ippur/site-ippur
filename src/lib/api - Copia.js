@@ -107,7 +107,7 @@ export async function deleteDocumentoTransparencia(id) {
 // =========================
 
 export async function listLicitacoes() {
-  const res = await fetch(`${BASE_URL}/transparencia/licitacoes`, {
+  const res = await fetch(`${BASE_URL}/api/transparencia/licitacoes`, {
     cache: "no-store",
   });
 
@@ -122,7 +122,7 @@ export async function createLicitacao(formData) {
   const token = getToken();
   if (!token) throw new Error("Token não encontrado");
 
-  const res = await fetch(`${BASE_URL}/transparencia/licitacoes`, {
+  const res = await fetch(`${BASE_URL}/api/transparencia/licitacoes`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: formData,
@@ -139,7 +139,7 @@ export async function deleteLicitacao(id) {
   const token = getToken();
   if (!token) throw new Error("Token não encontrado");
 
-  const res = await fetch(`${BASE_URL}/transparencia/licitacoes/${id}`, {
+  const res = await fetch(`${BASE_URL}/api/transparencia/licitacoes/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -219,22 +219,6 @@ export async function deleteNoticia(id) {
   if (!res.ok) {
     const msg = await parseError(res);
     throw new Error(msg || "Falha ao excluir notícia");
-  }
-  return res.json();
-}
-
-export async function deleteImagemGaleriaNoticia(id, imagemId) {
-  const token = getToken();
-  if (!token) throw new Error("Token não encontrado");
-
-  const res = await fetch(`${BASE_URL}/noticias/${id}/galeria/${imagemId}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!res.ok) {
-    const msg = await parseError(res);
-    throw new Error(msg || "Falha ao excluir imagem da galeria");
   }
   return res.json();
 }
