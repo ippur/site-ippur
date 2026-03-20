@@ -12,6 +12,7 @@ export default function NoticiaDetalhePage() {
 
   const [noticia, setNoticia] = useState(null);
   const [carregando, setCarregando] = useState(true);
+  const [imagemAtivaIndex, setImagemAtivaIndex] = useState(null);
 
   useEffect(() => {
     async function carregarNoticia() {
@@ -30,6 +31,51 @@ export default function NoticiaDetalhePage() {
 
     carregarNoticia();
   }, [id]);
+
+  const galeria = Array.isArray(noticia?.galeria) ? noticia.galeria : [];
+  const imagemAtiva =
+    imagemAtivaIndex !== null && galeria[imagemAtivaIndex]
+      ? galeria[imagemAtivaIndex]
+      : null;
+
+  function abrirImagem(index) {
+    setImagemAtivaIndex(index);
+  }
+
+  function fecharImagem() {
+    setImagemAtivaIndex(null);
+  }
+
+  function imagemAnterior() {
+    if (!galeria.length) return;
+    setImagemAtivaIndex((prev) =>
+      prev === 0 ? galeria.length - 1 : prev - 1
+    );
+  }
+
+  function proximaImagem() {
+    if (!galeria.length) return;
+    setImagemAtivaIndex((prev) =>
+      prev === galeria.length - 1 ? 0 : prev + 1
+    );
+  }
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (imagemAtivaIndex === null) return;
+
+      if (e.key === "Escape") {
+        fecharImagem();
+      } else if (e.key === "ArrowLeft") {
+        imagemAnterior();
+      } else if (e.key === "ArrowRight") {
+        proximaImagem();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [imagemAtivaIndex, galeria.length]);
 
   if (carregando) {
     return (
@@ -57,8 +103,6 @@ export default function NoticiaDetalhePage() {
       </PageBase>
     );
   }
-
-  const galeria = Array.isArray(noticia.galeria) ? noticia.galeria : [];
 
   return (
     <PageBase
@@ -94,20 +138,19 @@ export default function NoticiaDetalhePage() {
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {galeria.map((img) => (
-                <a
+              {galeria.map((img, index) => (
+                <button
                   key={img.id}
-                  href={img.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block bg-white border border-neutral-light rounded-xl overflow-hidden shadow-card hover:shadow-smooth transition-all duration-300 hover:scale-[1.01]"
+                  type="button"
+                  onClick={() => abrirImagem(index)}
+                  className="block bg-white border border-neutral-light rounded-xl overflow-hidden shadow-card hover:shadow-smooth transition-all duration-300 hover:scale-[1.01] text-left"
                 >
                   <img
                     src={img.url}
                     alt={`Imagem da galeria - ${noticia.titulo}`}
                     className="w-full h-52 object-cover"
                   />
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -122,6 +165,63 @@ export default function NoticiaDetalhePage() {
           </Link>
         </div>
       </div>
+
+      {imagemAtiva && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center px-4 py-6"
+          onClick={fecharImagem}
+        >
+          <div
+            className="relative max-w-6xl w-full flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={fecharImagem}
+              className="absolute top-2 right-2 md:top-4 md:right-4 z-10 bg-white/90 hover:bg-white text-neutral-900 rounded-full w-10 h-10 text-xl font-bold shadow"
+              aria-label="Fechar imagem"
+            >
+              ×
+            </button>
+
+            {galeria.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={imagemAnterior}
+                  className="absolute left-2 md:left-4 z-10 bg-white/90 hover:bg-white text-neutral-900 rounded-full w-10 h-10 text-xl font-bold shadow"
+                  aria-label="Imagem anterior"
+                >
+                  ‹
+                </button>
+
+                <button
+                  type="button"
+                  onClick={proximaImagem}
+                  className="absolute right-2 md:right-4 z-10 bg-white/90 hover:bg-white text-neutral-900 rounded-full w-10 h-10 text-xl font-bold shadow"
+                  aria-label="Próxima imagem"
+                >
+                  ›
+                </button>
+              </>
+            )}
+
+            <div className="w-full flex flex-col items-center">
+              <img
+                src={imagemAtiva.url}
+                alt={`Imagem ampliada - ${noticia.titulo}`}
+                className="max-h-[80vh] w-auto max-w-full rounded-xl shadow-2xl object-contain"
+              />
+
+              {galeria.length > 1 && (
+                <p className="text-white text-sm mt-4">
+                  {imagemAtivaIndex + 1} de {galeria.length}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </PageBase>
   );
 }
