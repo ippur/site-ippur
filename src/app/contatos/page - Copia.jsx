@@ -3,16 +3,12 @@
 import PageBase from "@/components/PageBase";
 import { useState } from "react";
 
-const WHATSAPP_NUMERO = "5594991122809"; // ajuste para o número real
+const WHATSAPP_NUMERO = "5594991122809"; // ajustar
 const WHATSAPP_TEXTO =
   "Olá! Gostaria de entrar em contato com o IPPUR para obter mais informações.";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(
   WHATSAPP_TEXTO
 )}`;
-
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com";
-const CONTATO_URL = `${API_BASE.replace(/\/$/, "")}/api/contato`;
 
 export default function Contatos() {
   const [form, setForm] = useState({
@@ -26,7 +22,6 @@ export default function Contatos() {
   const [anexo, setAnexo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mensagemStatus, setMensagemStatus] = useState("");
-  const [erro, setErro] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,10 +34,10 @@ export default function Contatos() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensagemStatus("");
-    setErro("");
     setLoading(true);
 
     try {
+      // Estrutura pronta para o backend
       const formData = new FormData();
       formData.append("nome", form.nome);
       formData.append("email", form.email);
@@ -51,18 +46,17 @@ export default function Contatos() {
       formData.append("mensagem", form.mensagem);
       if (anexo) formData.append("anexo", anexo);
 
-      const res = await fetch(CONTATO_URL, {
-        method: "POST",
-        body: formData,
-      });
+      // TODO: ligar na rota do backend quando criarmos
+      // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contato`, {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      // if (!res.ok) throw new Error("Falha ao enviar mensagem");
 
-      const data = await res.json().catch(() => ({}));
+      setMensagemStatus(
+        "Formulário pronto. Falta apenas ligar ao backend para envio real por e-mail."
+      );
 
-      if (!res.ok) {
-        throw new Error(data?.error || "Falha ao enviar mensagem.");
-      }
-
-      setMensagemStatus("Mensagem enviada com sucesso! Em breve entraremos em contato.");
       setForm({
         nome: "",
         email: "",
@@ -71,11 +65,8 @@ export default function Contatos() {
         mensagem: "",
       });
       setAnexo(null);
-
-      const inputFile = document.getElementById("anexo-contato");
-      if (inputFile) inputFile.value = "";
     } catch (error) {
-      setErro(error?.message || "Não foi possível enviar sua mensagem no momento.");
+      setMensagemStatus("Não foi possível enviar sua mensagem no momento.");
     } finally {
       setLoading(false);
     }
@@ -167,22 +158,19 @@ export default function Contatos() {
                 Anexo (opcional)
               </label>
               <input
-                id="anexo-contato"
                 type="file"
                 onChange={handleFileChange}
                 className="w-full border border-neutral-medium rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary-light"
                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
               />
               <p className="text-xs text-neutral-dark/60 mt-1">
-                Você pode anexar documentos ou imagens de até 5 MB.
+                Você pode anexar documentos ou imagens.
               </p>
             </div>
 
             {mensagemStatus && (
-              <p className="text-sm text-green-700">{mensagemStatus}</p>
+              <p className="text-sm text-primary-dark">{mensagemStatus}</p>
             )}
-
-            {erro && <p className="text-sm text-red-600">{erro}</p>}
 
             <button
               type="submit"
@@ -216,7 +204,7 @@ export default function Contatos() {
                 <p>IPPUR</p>
                 <p>Rua Benedito C Gomes, 82, Núcleo Urbano.</p>
                 <p>Redenção – Pará</p>
-                <p>CEP: 68553-375</p>
+                <p>CEP: 68553-375</p>                
               </div>
 
               <div>
