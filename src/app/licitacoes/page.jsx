@@ -33,7 +33,7 @@ export default function LicitacoesPage() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`${API}/api/transparencia/licitacoes`, {
+        const res = await fetch(`${API}/api/transparencia?tipo=licitacao`, {
           cache: "no-store",
         });
 
