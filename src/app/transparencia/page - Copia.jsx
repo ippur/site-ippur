@@ -6,25 +6,25 @@ import { motion } from "framer-motion";
 
 export default function TransparenciaPage() {
   const secoes = [
-  { titulo: "Acesso à Informação", icon: "📬", link: "/transparencia/acesso-informacao" },
-  { titulo: "Audiências e Participação Popular", icon: "🗣️", link: "/transparencia/audiencias" },
-  { titulo: "Convênios e Parcerias", icon: "🤝", link: "/transparencia/convenios" },
-  { titulo: "Dados Abertos", icon: "🗂️", link: "/transparencia/dados-abertos" },
-  { titulo: "Despesas e Pagamentos", icon: "💸", link: "/transparencia/despesas" },
-  { titulo: "Estrutura Organizacional e Servidores", icon: "🏢", link: "/transparencia/estrutura" },
-  { titulo: "Licitações e Contratos", icon: "📜", link: "/transparencia/licitacoes" },
-  { titulo: "Planejamento e Orçamento", icon: "📊", link: "/transparencia/orcamento" },
-  { titulo: "Receitas Públicas", icon: "💰", link: "/transparencia/receitas" },
-  { titulo: "Relatórios e Auditorias", icon: "📑", link: "/transparencia/relatorios" },
-  { titulo: "REURB", icon: "🏗️", link: "/transparencia/reurb" },
-  {
-    titulo: "Transparência RH",
-    icon: "👥",
-    desc: "Consulte servidores, diárias e demais dados públicos disponibilizados à população.",
-    href: "https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172",
-    externo: true,
-    destaque: false,
-  },
+    { titulo: "Acesso à Informação", icon: "📬", link: "/transparencia/acesso-informacao" },
+    { titulo: "Audiências e Participação Popular", icon: "🗣️", link: "/transparencia/audiencias" },
+    { titulo: "Convênios e Parcerias", icon: "🤝", link: "/transparencia/convenios" },
+    { titulo: "Dados Abertos", icon: "🗂️", link: "/transparencia/dados-abertos" },
+    { titulo: "Despesas e Pagamentos", icon: "💸", link: "/transparencia/despesas" },
+    { titulo: "Estrutura Organizacional e Servidores", icon: "🏢", link: "/transparencia/estrutura" },
+    { titulo: "Licitações e Contratos", icon: "📜", link: "/transparencia/licitacoes" },
+    { titulo: "Planejamento e Orçamento", icon: "📊", link: "/transparencia/planejamento" },
+    { titulo: "Receitas Públicas", icon: "💰", link: "/transparencia/receitas" },
+    { titulo: "Relatórios e Auditorias", icon: "📑", link: "/transparencia/relatorios" },
+    { titulo: "REURB", icon: "🏗️", link: "/transparencia/reurb" },
+    {
+      titulo: "Transparência RH",
+      icon: "👥",
+      desc: "Consulte servidores, diárias e demais dados públicos disponibilizados à população.",
+      href: "https://rpmsolucoes.com.br/wc/transparenciarh.aspx?idCNPJ=16366277000172",
+      externo: true,
+      destaque: false,
+    },
   ];
 
   return (
