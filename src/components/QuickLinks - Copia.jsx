@@ -21,6 +21,13 @@ export default function QuickLinks() {
       href: "/transparencia",
     },
     {
+      id: 3,
+      icon: <Scale className="w-8 h-8 text-primary" />,
+      title: "Licitações",
+      desc: "Confira editais, resultados e avisos oficiais.",
+      href: "/licitacoes",
+    },
+    {
       id: 4,
       icon: <User className="w-8 h-8 text-primary" />,
       title: "Portal do Servidor",
