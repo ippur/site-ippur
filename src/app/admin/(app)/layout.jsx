@@ -16,7 +16,6 @@ export default function AdminLayout({ children }) {
           <Link href="/admin/dashboard" style={{ color: "#fff" }}>Dashboard</Link>
           <Link href="/admin/noticias" style={{ color: "#fff" }}>Notícias</Link>
           <Link href="/admin/transparencia" style={{ color: "#fff" }}>Transparência</Link>
-          <Link href="/admin/licitacoes" style={{ color: "#fff" }}>Licitações</Link>
         </nav>
 
         <div style={{ marginTop: "40px" }}>
