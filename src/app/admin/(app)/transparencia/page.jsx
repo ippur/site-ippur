@@ -23,7 +23,6 @@ const TIPOS = [
   "Receita",
   "REURB",
   "Relatorio",
-  "Outros",
 ];
 
 function formatDateBR(value) {
