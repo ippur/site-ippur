@@ -27,7 +27,9 @@ const TIPOS = [
 
 function formatDateBR(value) {
   try {
-    const d = new Date(value);
+    if (!value) return "";
+    const str = typeof value === "string" ? value : String(value);
+    const d = new Date(str.slice(0, 10) + "T12:00:00");
     if (Number.isNaN(d.getTime())) return value;
     return d.toLocaleDateString("pt-BR");
   } catch {
@@ -35,8 +37,6 @@ function formatDateBR(value) {
   }
 }
 
-// Se o backend/supabase já devolver URL completa, usa direto.
-// Se devolver caminho relativo (/uploads/arquivo.pdf), monta a URL base.
 function buildFileUrl(filePath) {
   if (!filePath) return null;
 

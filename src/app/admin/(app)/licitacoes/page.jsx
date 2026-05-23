@@ -14,6 +14,17 @@ function buildFileUrl(filePath) {
   return `${API}${filePath}`;
 }
 
+function getHoje() {
+  const hoje = new Date();
+  return `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+}
+
+function formatarData(dataStr) {
+  if (!dataStr) return "";
+  const d = new Date(dataStr + "T12:00:00");
+  return d.toLocaleDateString("pt-BR");
+}
+
 export default function LicitacoesPage() {
   const router = useRouter();
 
@@ -23,7 +34,7 @@ export default function LicitacoesPage() {
   const [titulo, setTitulo] = useState("");
   const [modalidade, setModalidade] = useState("");
   const [status, setStatus] = useState("Aberta");
-  const [data, setData] = useState(() => new Date().toISOString().slice(0, 10));
+  const [data, setData] = useState(getHoje);
   const [comentarios, setComentarios] = useState("");
   const [arquivo, setArquivo] = useState(null);
 
@@ -74,7 +85,7 @@ export default function LicitacoesPage() {
       setTitulo("");
       setModalidade("");
       setStatus("Aberta");
-      setData(new Date().toISOString().slice(0, 10));
+      setData(getHoje());
       setComentarios("");
       setArquivo(null);
 
@@ -162,7 +173,7 @@ export default function LicitacoesPage() {
           <li key={it.id} style={{ marginBottom: 12 }}>
             <strong>{it.titulo}</strong>{" "}
             <small>({it.modalidade} | {it.status})</small>{" "}
-            <small>{new Date(it.data).toLocaleDateString("pt-BR")}</small>
+            <small>{formatarData(it.data)}</small>
 
             {it.comentarios && (
               <div style={{ marginTop: 4 }}>
@@ -172,7 +183,7 @@ export default function LicitacoesPage() {
 
             <div style={{ marginTop: 6 }}>
               {it.arquivo && (
-                 <a href={buildFileUrl(it.arquivo)} target="_blank" rel="noreferrer">
+                <a href={buildFileUrl(it.arquivo)} target="_blank" rel="noreferrer">
                   Abrir
                 </a>
               )}
