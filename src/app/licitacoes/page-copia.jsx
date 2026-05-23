@@ -7,10 +7,15 @@ const API =
   process.env.NEXT_PUBLIC_API_URL || "https://backend-site-eq0r.onrender.com";
 
 function formatDateBR(value) {
+  if (!value) return "—";
+
   try {
-    const d = new Date(value);
-    if (Number.isNaN(d.getTime())) return value;
-    return d.toLocaleDateString("pt-BR");
+    // Remove horário/timezone caso exista
+    const dateOnly = value.split("T")[0];
+
+    const [ano, mes, dia] = dateOnly.split("-");
+
+    return `${dia}/${mes}/${ano}`;
   } catch {
     return value;
   }
